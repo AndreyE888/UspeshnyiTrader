@@ -1,0 +1,190 @@
+<!-- Navigation Partial -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <!-- Brand -->
+        <a class="navbar-brand fw-bold" href="@Url.Action("Index", "Home")">
+            📈 UspeshnyiTrader
+        </a>
+
+        <!-- Mobile Toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")"
+                       href="@Url.Action("Index", "Home")">
+                        <i class="fas fa-home me-1"></i>Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Trading" ? "active" : "")"
+                       href="@Url.Action("Index", "Trading")">
+                        <i class="fas fa-chart-line me-1"></i>Trade
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Instruments" ? "active" : "")"
+                       href="@Url.Action("Index", "Instruments")">
+                        <i class="fas fa-list me-1"></i>Instruments
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "History" ? "active" : "")"
+                       href="@Url.Action("Index", "History")">
+                        <i class="fas fa-history me-1"></i>History
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Right Side -->
+            <ul class="navbar-nav">
+                @if (Context.Session.GetInt32("UserId") != null)
+                {
+                    <!-- User Balance -->
+                    <li class="nav-item">
+                        <div class="nav-link">
+                            <span class="badge bg-success balance-display">
+                                <i class="fas fa-wallet me-1"></i>
+                                <span id="navBalance">$0.00</span>
+                            </span>
+                        </div>
+                    </li>
+
+                    <!-- User Menu -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>
+                            @Context.Session.GetString("Username") ?? "User"
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("Profile", "Account")">
+                                    <i class="fas fa-user-circle me-2"></i>Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("Index", "History")">
+                                    <i class="fas fa-history me-2"></i>Trade History
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    <!-- Auth Links -->
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Login" ? "active" : "")"
+                           href="@Url.Action("Login", "Account")">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Register" ? "active" : "")"
+                           href="@Url.Action("Register", "Account")">
+                            <i class="fas fa-user-plus me-1"></i>Register
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Price Ticker (only show when logged in) -->
+@if (Context.Session.GetInt32("UserId") != null)
+{
+    <div class="bg-light border-bottom py-1">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex overflow-auto">
+                        <marquee behavior="scroll" direction="left" scrollamount="3">
+                            <span class="me-4">
+                                <strong>EUR/USD:</strong> 
+                                <span id="ticker-eurusd" class="price-ticker">$1.0850</span>
+                            </span>
+                            <span class="me-4">
+                                <strong>GBP/USD:</strong> 
+                                <span id="ticker-gbpusd" class="price-ticker">$1.2650</span>
+                            </span>
+                            <span class="me-4">
+                                <strong>BTC/USD:</strong> 
+                                <span id="ticker-btcusd" class="price-ticker">$45,000.00</span>
+                            </span>
+                            <span class="me-4">
+                                <strong>ETH/USD:</strong> 
+                                <span id="ticker-ethusd" class="price-ticker">$2,500.00</span>
+                            </span>
+                            <span class="me-4">
+                                <strong>XAU/USD:</strong> 
+                                <span id="ticker-xauusd" class="price-ticker">$1,980.00</span>
+                            </span>
+                        </marquee>
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+                    <small class="text-muted">
+                        <i class="fas fa-clock me-1"></i>
+                        <span id="currentTime">@DateTime.Now.ToString("HH:mm:ss")</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function() {
+        // Update user balance in navigation
+        function updateNavBalance() {
+            $.get('/Trading/GetUserBalance', function(data) {
+                if (data.balance !== undefined) {
+                    $('#navBalance').text(formatCurrency(data.balance));
+                }
+            });
+        }
+
+        // Update price ticker
+        function updatePriceTicker() {
+            $.get('/Instruments/GetPrices', function(prices) {
+                // This would map instrument IDs to ticker symbols
+                // For demo, we'll use static mapping
+                $('#ticker-eurusd').text('$' + (prices[1] || 1.0850).toFixed(4));
+                $('#ticker-gbpusd').text('$' + (prices[2] || 1.2650).toFixed(4));
+                $('#ticker-btcusd').text('$' + (prices[4] || 45000).toFixed(2));
+                $('#ticker-ethusd').text('$' + (prices[5] || 2500).toFixed(2));
+                $('#ticker-xauusd').text('$' + (prices[6] || 1980).toFixed(2));
+            });
+        }
+
+        // Update current time
+        function updateCurrentTime() {
+            $('#currentTime').text(new Date().toLocaleTimeString());
+        }
+
+        // Initialize if user is logged in
+        @if (Context.Session.GetInt32("UserId") != null)
+        {
+            <text>
+                updateNavBalance();
+                updatePriceTicker();
+                setInterval(updateNavBalance, 30000); // Update balance every 30 seconds
+                setInterval(updatePriceTicker, 5000); // Update ticker every 5 seconds
+                setInterval(updateCurrentTime, 1000); // Update time every second
+            </text>
+        }
+    });
+</script>

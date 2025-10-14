@@ -1,0 +1,42 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Торговля - UspeshnyiTrader</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .nav { background: #2c3e50; padding: 15px; }
+        .nav a { color: white; text-decoration: none; margin: 0 15px; }
+    </style>
+</head>
+<body>
+<div class="nav">
+    <a href="/">← На главную</a>
+</div>
+    
+<h1>📈 Торговая платформа</h1>
+
+<div class="alert alert-info">
+    <h4>Welcome, @ViewBag.UserName!</h4>
+    <p>Your balance: <strong>$@ViewBag.UserBalance</strong></p>
+</div>
+
+<p>Выберите инструмент для торговли:</p>
+    
+<div style="margin: 20px 0;">
+    <a href="/Trading/Trade?symbol=EURUSD" style="display: block; padding: 10px; background: #3498db; color: white; text-decoration: none; margin: 5px 0;">
+        EUR/USD - Торговать
+    </a>
+    <a href="/Trading/Trade?symbol=GBPUSD" style="display: block; padding: 10px; background: #3498db; color: white; text-decoration: none; margin: 5px 0;">
+        GBP/USD - Торговать
+    </a>
+    <a href="/Trading/Trade?symbol=USDJPY" style="display: block; padding: 10px; background: #3498db; color: white; text-decoration: none; margin: 5px 0;">
+        USD/JPY - Торговать
+    </a>
+</div>
+</body>
+</html>
+

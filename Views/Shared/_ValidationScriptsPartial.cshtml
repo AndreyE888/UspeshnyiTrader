@@ -1,0 +1,156 @@
+﻿<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    // Custom validation methods
+    $.validator.addMethod("currency", function(value, element) {
+        return this.optional(element) || /^\$?(\d{1,3}(,\d{3})*|(\d+))(\.\d{2})?$/.test(value);
+    }, "Please enter a valid currency amount");
+
+    $.validator.addMethod("percentage", function(value, element) {
+        return this.optional(element) || /^-?\d+(\.\d+)?%?$/.test(value);
+    }, "Please enter a valid percentage");
+
+    $.validator.addMethod("minamount", function(value, element) {
+        var amount = parseFloat(value.replace(/[^\d.-]/g, ''));
+        return this.optional(element) || (amount >= 1 && amount <= 1000);
+    }, "Amount must be between $1 and $1000");
+
+    // Custom unobtrusive adapters
+    $.validator.unobtrusive.adapters.add("minamount", function(options) {
+        options.rules["minamount"] = true;
+        options.messages["minamount"] = options.message;
+    });
+
+    // Enhanced validation display
+    $(document).ready(function() {
+        // Style validation errors
+        $.validator.setDefaults({
+            errorClass: "is-invalid",
+            validClass: "is-valid",
+            errorElement: "div",
+            errorPlacement: function(error, element) {
+                error.addClass("invalid-feedback");
+                if (element.prop("type") === "checkbox") {
+                    error.insertAfter(element.next("label"));
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass(errorClass).removeClass(validClass);
+                $(element).closest(".form-group").addClass("has-error");
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass(errorClass).addClass(validClass);
+                $(element).closest(".form-group").removeClass("has-error");
+            }
+        });
+
+        // Real-time validation for trade amount
+        $("input[data-val-minamount]").on("input", function() {
+            $(this).valid();
+        });
+
+        // Custom trade form validation
+        $("#tradeForm").validate({
+            rules: {
+                Amount: {
+                    required: true,
+                    number: true,
+                    min: 1,
+                    max: 1000
+                },
+                Duration: {
+                    required: true,
+                    digits: true,
+                    min: 1,
+                    max: 1440
+                }
+            },
+            messages: {
+                Amount: {
+                    required: "Please enter a trade amount",
+                    number: "Please enter a valid number",
+                    min: "Minimum trade amount is $1",
+                    max: "Maximum trade amount is $1000"
+                },
+                Duration: {
+                    required: "Please select a trade duration",
+                    digits: "Duration must be in minutes",
+                    min: "Minimum duration is 1 minute",
+                    max: "Maximum duration is 24 hours"
+                }
+            }
+        });
+
+        // Password strength validation
+        $.validator.addMethod("passwordStrength", function(value, element) {
+            return this.optional(element) ||
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/.test(value);
+        }, "Password must contain at least one uppercase letter, one lowercase letter, and one number");
+
+        // Username availability check (would need server-side implementation)
+        $.validator.addMethod("usernameAvailable", function(value, element) {
+            var isAvailable = true;
+            // This would typically make an AJAX call to check username availability
+            // For now, we'll assume it's available
+            return this.optional(element) || isAvailable;
+        }, "This username is already taken");
+
+        // Email availability check
+        $.validator.addMethod("emailAvailable", function(value, element) {
+            var isAvailable = true;
+            // This would typically make an AJAX call to check email availability
+            return this.optional(element) || isAvailable;
+        }, "This email is already registered");
+    });
+</script>
+
+<style>
+    .field-validation-error {
+        color: #dc3545;
+        font-size: 0.875em;
+        margin-top: 0.25rem;
+    }
+
+    .field-validation-valid {
+        display: none;
+    }
+
+    .input-validation-error {
+        border-color: #dc3545;
+        padding-right: calc(1.5em + 0.75rem);
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6.4.4.4-.4'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right calc(0.375em + 0.1875rem) center;
+        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+    }
+
+    .input-validation-error:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+
+    .validation-summary-errors {
+        color: #dc3545;
+    }
+
+    .validation-summary-errors ul {
+        padding-left: 0;
+        list-style: none;
+        margin-bottom: 0;
+    }
+
+    .validation-summary-errors li {
+        margin-bottom: 0.25rem;
+    }
+
+    .form-group.has-error .form-control {
+        border-color: #dc3545;
+    }
+
+    .form-group.has-error .form-label {
+        color: #dc3545;
+    }
+</style>
