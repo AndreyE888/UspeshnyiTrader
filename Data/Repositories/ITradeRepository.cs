@@ -16,5 +16,14 @@ namespace UspeshnyiTrader.Data.Repositories
         Task DeleteAsync(int id);
         Task<bool> ExistsAsync(int id);
         Task<List<Trade>> GetTradesToCloseAsync(DateTime currentTime);
+        Task<int> GetCountAsync();
+        Task<int> GetActiveCountAsync();
+        Task<int> GetTodayCountAsync();
+    
+        // Новые методы для админки
+        Task<int> GetSuccessfulTradesCountAsync();
+        Task<decimal> GetTotalVolumeAsync();
+        Task<decimal> GetPlatformProfitAsync();
+        Task<List<Trade>> GetUserTradesAsync(int userId);
     }
 }

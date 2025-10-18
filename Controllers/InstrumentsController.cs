@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using UspeshnyiTrader.Data.Repositories;
+using UspeshnyiTrader.Models.Entities;
 
 namespace UspeshnyiTrader.Controllers
 {
@@ -18,6 +19,55 @@ namespace UspeshnyiTrader.Controllers
             return View(instruments);
         }
 
+        // НОВЫЙ МЕТОД: Страница изменений в прайсе
+        public async Task<IActionResult> PriceChanges()
+        {
+            var instruments = await _instrumentRepository.GetActiveAsync();
+            
+            // Создаем историю изменений (в реальном проекте была бы отдельная таблица)
+            var priceChanges = instruments.Select(i => new
+            {
+                Instrument = i.Symbol,
+                Name = i.Name,
+                CurrentPrice = i.CurrentPrice,
+                OldPrice = Math.Round(i.CurrentPrice * 0.995m, 4), // -0.5% для примера
+                Change = "+0.5%",
+                LastUpdate = i.LastPriceUpdate ?? DateTime.UtcNow
+            }).ToList();
+
+            ViewBag.PriceChanges = priceChanges;
+            return View();
+        }
+
+        // НОВЫЙ МЕТОД: Детальная страница инструмента
+        public async Task<IActionResult> Details(int id)
+        {
+            var instrument = await _instrumentRepository.GetByIdAsync(id);
+            if (instrument == null)
+            {
+                return NotFound();
+            }
+            return View(instrument);
+        }
+
+        // НОВЫЙ МЕТОД: API для получения истории цен (для графиков)
+        [HttpGet]
+        public IActionResult GetPriceHistory(int instrumentId, string period = "1d")
+        {
+            // Демо-данные для графика (в реальном проекте из БД)
+            var demoData = new[]
+            {
+                new { time = DateTime.UtcNow.AddHours(-24), price = 1.0800m },
+                new { time = DateTime.UtcNow.AddHours(-18), price = 1.0820m },
+                new { time = DateTime.UtcNow.AddHours(-12), price = 1.0835m },
+                new { time = DateTime.UtcNow.AddHours(-6), price = 1.0840m },
+                new { time = DateTime.UtcNow, price = 1.0850m }
+            };
+
+            return Json(demoData);
+        }
+
+        // СУЩЕСТВУЮЩИЕ МЕТОДЫ (оставляем как есть):
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -53,13 +103,12 @@ namespace UspeshnyiTrader.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdatePrices()
         {
-            // Простая имитация обновления цен
             var instruments = await _instrumentRepository.GetActiveAsync();
             var random = new Random();
             
             foreach (var instrument in instruments)
             {
-                var changePercent = (random.NextDouble() - 0.5) * 0.1; // ±5%
+                var changePercent = (random.NextDouble() - 0.5) * 0.1;
                 instrument.CurrentPrice = Math.Round(instrument.CurrentPrice * (1 + (decimal)changePercent), 4);
                 instrument.LastPriceUpdate = DateTime.UtcNow;
             }
@@ -72,39 +121,48 @@ namespace UspeshnyiTrader.Controllers
         [HttpPost]
         public async Task<IActionResult> SimulatePriceChange()
         {
-            // Тот же метод что и UpdatePrices
             return await UpdatePrices();
         }
 
         [HttpPost]
         public async Task<IActionResult> InitializeInstruments()
         {
-            // Проверяем есть ли инструменты, если нет - создаем демо
             var existingInstruments = await _instrumentRepository.GetActiveAsync();
             if (!existingInstruments.Any())
             {
                 var demoInstruments = new[]
                 {
-                    new Models.Entities.Instrument 
+                    new Instrument 
                     { 
                         Symbol = "EURUSD", 
                         Name = "Euro vs US Dollar",
                         CurrentPrice = 1.0850m,
-                        IsActive = true
+                        IsActive = true,
+                        Description = "Валютная пара Евро/Доллар США"
                     },
-                    new Models.Entities.Instrument 
+                    new Instrument 
                     { 
                         Symbol = "GBPUSD", 
                         Name = "British Pound vs US Dollar",
                         CurrentPrice = 1.2650m,
-                        IsActive = true
+                        IsActive = true,
+                        Description = "Валютная пара Фунт Стерлингов/Доллар США"
                     },
-                    new Models.Entities.Instrument 
+                    new Instrument 
                     { 
                         Symbol = "USDJPY", 
                         Name = "US Dollar vs Japanese Yen", 
                         CurrentPrice = 148.50m,
-                        IsActive = true
+                        IsActive = true,
+                        Description = "Валютная пара Доллар США/Японская Йена"
+                    },
+                    new Instrument 
+                    { 
+                        Symbol = "XAUUSD", 
+                        Name = "Gold vs US Dollar", 
+                        CurrentPrice = 2020.50m,
+                        IsActive = true,
+                        Description = "Золото к Доллару США"
                     }
                 };
                 

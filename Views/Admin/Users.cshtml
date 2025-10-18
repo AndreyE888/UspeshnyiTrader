@@ -1,0 +1,501 @@
+@model IEnumerable<UspeshnyiTrader.Models.Entities.User>
+@{
+    ViewData["Title"] = "Управление пользователями";
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <style>
+        .users-hero {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .users-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th {
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            font-weight: 600;
+            color: #2c3e50;
+            padding: 1rem;
+        }
+
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active { background: #d5f4e6; color: #27ae60; }
+        .status-blocked { background: #fadbd8; color: #e74c3c; }
+        .status-pending { background: #ffeaa7; color: #e17055; }
+
+        .balance-cell {
+            font-weight: 600;
+            color: #27ae60;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-action {
+            padding: 0.3rem 0.8rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit { background: #3498db; color: white; }
+        .btn-block { background: #e74c3c; color: white; }
+        .btn-unblock { background: #27ae60; color: white; }
+        .btn-view { background: #f39c12; color: white; }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .filters-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+
+        .search-input {
+            padding-left: 3rem;
+            border-radius: 25px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            border: 2px solid #e9ecef;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .user-details-modal .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .user-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .user-stat-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .trades-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .trade-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .trade-item:last-child {
+            border-bottom: none;
+        }
+
+        .trade-success { color: #27ae60; }
+        .trade-failure { color: #e74c3c; }
+
+        @@media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .users-hero h1 {
+                font-size: 2rem;
+            }
+
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+}
+
+<!-- Hero Section -->
+<section class="users-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold">👥 Управление пользователями</h1>
+                <p class="lead mb-0">Просмотр и управление пользователями платформы</p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div style="font-size: 4rem;">👤</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Filters and Search -->
+    <div class="filters-section">
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="form-control search-input" placeholder="Поиск пользователей..." id="userSearch">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterUsers('all')">Все</button>
+                    <button class="filter-btn" onclick="filterUsers('active')">Активные</button>
+                    <button class="filter-btn" onclick="filterUsers('blocked')">Заблокированные</button>
+                    <button class="filter-btn" onclick="filterUsers('recent')">Новые</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="users-table">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>Пользователь</th>
+                    <th>Email</th>
+                    <th>Баланс</th>
+                    <th>Статус</th>
+                    <th>Дата регистрации</th>
+                    <th>Последний вход</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr class="user-row" data-status="@(user.IsActive ? "active" : "blocked")" data-username="@user.Username.ToLower()">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar">
+                                    @user.Username.Substring(0, 1).ToUpper()
+                                </div>
+                                <div>
+                                    <div class="fw-bold">@user.Username</div>
+                                    <small class="text-muted">ID: @user.Id</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>@user.Email</td>
+                        <td class="balance-cell">$@user.Balance.ToString("N2")</td>
+                        <td>
+                            @if (user.IsActive)
+                            {
+                                <span class="status-badge status-active">✅ Активен</span>
+                            }
+                            else
+                            {
+                                <span class="status-badge status-blocked">❌ Заблокирован</span>
+                            }
+                        </td>
+                        <td>@user.CreatedAt.ToString("dd.MM.yyyy")</td>
+                        <td>@(user.LastLogin.ToString("dd.MM.yyyy HH:mm") ?? "Никогда")</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-action btn-view" onclick="viewUserDetails(@user.Id)" title="Просмотр">
+                                    👁️
+                                </button>
+                                <button class="btn-action btn-edit" onclick="editUserBalance(@user.Id)" title="Изменить баланс">
+                                    💰
+                                </button>
+                                @if (user.IsActive)
+                                {
+                                    <button class="btn-action btn-block" onclick="blockUser(@user.Id)" title="Заблокировать">
+                                        🚫
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn-action btn-unblock" onclick="unblockUser(@user.Id)" title="Разблокировать">
+                                        ✅
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Users pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">← Назад</a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Вперед →</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<!-- User Details Modal -->
+<div class="modal fade user-details-modal" id="userDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">👤 Детальная информация о пользователе</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="userDetailsContent">
+                <!-- Content will be loaded via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Balance Modal -->
+<div class="modal fade" id="editBalanceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">💰 Изменение баланса</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="balanceForm">
+                    <div class="mb-3">
+                        <label for="newBalance" class="form-label">Новый баланс ($)</label>
+                        <input type="number" class="form-control" id="newBalance" step="0.01" min="0" required>
+                    </div>
+                    <input type="hidden" id="editUserId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" onclick="saveBalance()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let currentUserId = 0;
+
+        // Поиск пользователей
+        document.getElementById('userSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('.user-row');
+
+            rows.forEach(row => {
+                const username = row.dataset.username;
+                if (username.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Фильтрация пользователей
+        function filterUsers(status) {
+            const rows = document.querySelectorAll('.user-row');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+
+            filterBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            rows.forEach(row => {
+                if (status === 'all' || row.dataset.status === status) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // Просмотр деталей пользователя
+        function viewUserDetails(userId) {
+            fetch(`/Admin/UserDetails/${userId}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('userDetailsContent').innerHTML = html;
+                    new bootstrap.Modal(document.getElementById('userDetailsModal')).show();
+                });
+        }
+
+        // Редактирование баланса
+        function editUserBalance(userId) {
+            currentUserId = userId;
+            const currentBalance = document.querySelector(`[onclick="editUserBalance(${userId})"]`)
+                .closest('tr')
+                .querySelector('.balance-cell')
+                .textContent
+                .replace('$', '')
+                .trim();
+
+            document.getElementById('newBalance').value = currentBalance;
+            document.getElementById('editUserId').value = userId;
+            new bootstrap.Modal(document.getElementById('editBalanceModal')).show();
+        }
+
+        // Сохранение баланса
+        function saveBalance() {
+            const newBalance = document.getElementById('newBalance').value;
+
+            fetch('/Admin/UpdateUserBalance', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `userId=${currentUserId}&newBalance=${newBalance}`
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('✅ Баланс успешно обновлен');
+                        location.reload();
+                    } else {
+                        alert('❌ Ошибка при обновлении баланса');
+                    }
+                });
+        }
+
+        // Блокировка пользователя
+        function blockUser(userId) {
+            if (confirm('🚫 Вы уверены, что хотите заблокировать этого пользователя?')) {
+                fetch('/Admin/BlockUser', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `userId=${userId}`
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('✅ Пользователь заблокирован');
+                            location.reload();
+                        }
+                    });
+            }
+        }
+
+        // Разблокировка пользователя
+        function unblockUser(userId) {
+            if (confirm('✅ Вы уверены, что хотите разблокировать этого пользователя?')) {
+                fetch('/Admin/UnblockUser', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `userId=${userId}`
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('✅ Пользователь разблокирован');
+                            location.reload();
+                        }
+                    });
+            }
+        }
+
+        // Анимация появления
+        document.addEventListener('DOMContentLoaded', function() {
+            const rows = document.querySelectorAll('.user-row');
+            rows.forEach((row, index) => {
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(-30px)';
+                row.style.transition = 'all 0.6s ease';
+
+                setTimeout(() => {
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateX(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+}

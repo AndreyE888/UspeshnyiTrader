@@ -29,8 +29,8 @@ namespace UspeshnyiTrader.Models.ViewModels
         [Display(Name = "Instrument")]
         public int? InstrumentId { get; set; }
 
-        [Display(Name = "Direction")]
-        public TradeDirection? Direction { get; set; }
+        [Display(Name = "Trade Type")]
+        public TradeType? TradeType { get; set; } // ✅ МЕНЯЕМ Direction на TradeType
 
         [Display(Name = "Min Amount")]
         [Range(1, 1000, ErrorMessage = "Amount must be between $1 and $1000")]
@@ -41,7 +41,7 @@ namespace UspeshnyiTrader.Models.ViewModels
         public decimal? MaxAmount { get; set; }
 
         [Display(Name = "Sort By")]
-        public string SortBy { get; set; } = "OpenTime";
+        public string SortBy { get; set; } = "CreatedAt"; // ✅ МЕНЯЕМ OpenTime на CreatedAt
 
         [Display(Name = "Sort Order")]
         public SortOrder SortOrder { get; set; } = SortOrder.Descending;
@@ -52,7 +52,7 @@ namespace UspeshnyiTrader.Models.ViewModels
 
         public bool HasFilters => 
             StartDate.HasValue || EndDate.HasValue || Status.HasValue || 
-            InstrumentId.HasValue || Direction.HasValue || 
+            InstrumentId.HasValue || TradeType.HasValue || 
             MinAmount.HasValue || MaxAmount.HasValue;
 
         public void ClearFilters()
@@ -61,7 +61,7 @@ namespace UspeshnyiTrader.Models.ViewModels
             EndDate = null;
             Status = null;
             InstrumentId = null;
-            Direction = null;
+            TradeType = null; // ✅ МЕНЯЕМ
             MinAmount = null;
             MaxAmount = null;
         }
@@ -148,8 +148,8 @@ namespace UspeshnyiTrader.Models.ViewModels
         [Display(Name = "Include Columns")]
         public List<string> IncludedColumns { get; set; } = new()
         {
-            "TradeId", "Instrument", "Direction", "Amount", "OpenPrice", 
-            "ClosePrice", "Payout", "Status", "OpenTime", "CloseTime", "Duration"
+            "TradeId", "Instrument", "TradeType", "Amount", "EntryPrice", // ✅ МЕНЯЕМ
+            "ExitPrice", "Profit", "Status", "CreatedAt", "ClosedAt", "Duration" // ✅ МЕНЯЕМ
         };
 
         [Display(Name = "Date Range")]
@@ -231,24 +231,26 @@ namespace UspeshnyiTrader.Models.ViewModels
         public Instrument Instrument { get; set; } = new();
         public List<Candle> PriceHistory { get; set; } = new();
         
-        public decimal MarketMove => Trade.ClosePrice.HasValue ? 
-            ((Trade.ClosePrice.Value - Trade.OpenPrice) / Trade.OpenPrice) * 100 : 0;
+        // ✅ ПЕРЕПИСЫВАЕМ ЛОГИКУ ДЛЯ НОВОЙ МОДЕЛИ
+        public decimal MarketMove => Trade.ExitPrice.HasValue ? 
+            ((Trade.ExitPrice.Value - Trade.EntryPrice) / Trade.EntryPrice) * 100 : 0;
         
-        public decimal RequiredMove => Trade.Direction == TradeDirection.Up ? 0.01m : -0.01m;
+        public decimal RequiredMove => Trade.Type == TradeType.Buy ? 0.01m : -0.01m;
         
         public bool WasCloseCall => Math.Abs(MarketMove - RequiredMove) <= 0.1m;
         
-        public TimeSpan TradeDuration => Trade.CloseTime - Trade.OpenTime;
+        public TimeSpan TradeDuration => Trade.ClosedAt.HasValue ? 
+            Trade.ClosedAt.Value - Trade.CreatedAt : TimeSpan.Zero;
         
         public string Analysis 
         { 
             get 
             {
-                if (!Trade.ClosePrice.HasValue) return "Trade is still active";
+                if (!Trade.ExitPrice.HasValue) return "Trade is still active";
                 
-                var won = Trade.Status == TradeStatus.Won;
+                var won = Trade.Status == TradeStatus.Completed && Trade.Profit > 0;
                 var moveDirection = MarketMove >= 0 ? "up" : "down";
-                var requiredDirection = Trade.Direction == TradeDirection.Up ? "up" : "down";
+                var requiredDirection = Trade.Type == TradeType.Buy ? "up" : "down";
                 
                 return won ? 
                     $"Correctly predicted {requiredDirection} movement. Market moved {moveDirection} by {Math.Abs(MarketMove):F2}%" :
@@ -266,5 +268,29 @@ namespace UspeshnyiTrader.Models.ViewModels
         public int WonTrades { get; set; }
         public decimal WinRate => TotalTrades > 0 ? (decimal)WonTrades / TotalTrades * 100 : 0;
         public decimal AverageProfit { get; set; }
+    }
+
+    // ✅ ДОБАВЛЯЕМ ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ДЛЯ СТАТИСТИКИ
+    public static class HistoryStatsCalculator
+    {
+        public static HistoryStats CalculateStats(List<Trade> trades)
+        {
+            var stats = new HistoryStats
+            {
+                TotalTrades = trades.Count,
+                ActiveTrades = trades.Count(t => t.Status == TradeStatus.Active),
+                WonTrades = trades.Count(t => t.Status == TradeStatus.Completed && t.Profit > 0),
+                LostTrades = trades.Count(t => t.Status == TradeStatus.Completed && t.Profit <= 0),
+                CancelledTrades = trades.Count(t => t.Status == TradeStatus.Cancelled),
+                
+                TotalInvested = trades.Where(t => t.Status != TradeStatus.Active).Sum(t => t.Amount),
+                TotalPayout = trades.Where(t => t.Profit.HasValue).Sum(t => t.Profit.Value),
+                
+                BestTradeProfit = trades.Where(t => t.Profit.HasValue).Max(t => t.Profit.Value),
+                WorstTradeLoss = trades.Where(t => t.Profit.HasValue).Min(t => t.Profit.Value)
+            };
+
+            return stats;
+        }
     }
 }

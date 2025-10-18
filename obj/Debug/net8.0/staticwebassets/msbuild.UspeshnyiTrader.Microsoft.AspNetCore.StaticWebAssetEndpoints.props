@@ -48,6 +48,54 @@
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-Jtxf9L\u002B5ITKRc1gIRl4VbUpGkRNfOBXjYTdhJD4facM="}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"5430"},{"Name":"Content-Type","Value":"image/x-icon"},{"Name":"ETag","Value":"\u0022Jtxf9L\u002B5ITKRc1gIRl4VbUpGkRNfOBXjYTdhJD4facM=\u0022"},{"Name":"Last-Modified","Value":"Mon, 29 Sep 2025 10:55:58 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/UspeshnyiTrader/images/hero-trader.949zhl97dq.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\hero-trader.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"949zhl97dq"},{"Name":"integrity","Value":"sha256-F3LzRDZsTiS6O8ClZu\u002Bu8mlLHa96qLISqt4kifnaaYg="},{"Name":"label","Value":"_content/UspeshnyiTrader/images/hero-trader.jpg"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"117335"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022F3LzRDZsTiS6O8ClZu\u002Bu8mlLHa96qLISqt4kifnaaYg=\u0022"},{"Name":"Last-Modified","Value":"Fri, 17 Oct 2025 11:31:18 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/UspeshnyiTrader/images/hero-trader.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\hero-trader.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-F3LzRDZsTiS6O8ClZu\u002Bu8mlLHa96qLISqt4kifnaaYg="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"117335"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022F3LzRDZsTiS6O8ClZu\u002Bu8mlLHa96qLISqt4kifnaaYg=\u0022"},{"Name":"Last-Modified","Value":"Fri, 17 Oct 2025 11:31:18 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/UspeshnyiTrader/images/success-story.2435cugsvq.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\success-story.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"2435cugsvq"},{"Name":"integrity","Value":"sha256-AmM9DRiak14CQMFquyelL9NAFoi0GCfbdrm0zka7AvE="},{"Name":"label","Value":"_content/UspeshnyiTrader/images/success-story.jpg"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"90930"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022AmM9DRiak14CQMFquyelL9NAFoi0GCfbdrm0zka7AvE=\u0022"},{"Name":"Last-Modified","Value":"Fri, 17 Oct 2025 11:35:19 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/UspeshnyiTrader/images/success-story.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\success-story.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-AmM9DRiak14CQMFquyelL9NAFoi0GCfbdrm0zka7AvE="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"90930"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022AmM9DRiak14CQMFquyelL9NAFoi0GCfbdrm0zka7AvE=\u0022"},{"Name":"Last-Modified","Value":"Fri, 17 Oct 2025 11:35:19 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/UspeshnyiTrader/images/team-photo.gtku6zyqh8.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\team-photo.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"gtku6zyqh8"},{"Name":"integrity","Value":"sha256-5JY3hNFAxosyJx8vobzew1Yo9eRHAFDTP9\u002BftBxp67I="},{"Name":"label","Value":"_content/UspeshnyiTrader/images/team-photo.jpg"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"310394"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u00225JY3hNFAxosyJx8vobzew1Yo9eRHAFDTP9\u002BftBxp67I=\u0022"},{"Name":"Last-Modified","Value":"Fri, 17 Oct 2025 11:41:27 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/UspeshnyiTrader/images/team-photo.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\team-photo.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-5JY3hNFAxosyJx8vobzew1Yo9eRHAFDTP9\u002BftBxp67I="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"310394"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u00225JY3hNFAxosyJx8vobzew1Yo9eRHAFDTP9\u002BftBxp67I=\u0022"},{"Name":"Last-Modified","Value":"Fri, 17 Oct 2025 11:41:27 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/UspeshnyiTrader/images/trading-chart.a9q2jj8kra.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\trading-chart.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"a9q2jj8kra"},{"Name":"integrity","Value":"sha256-bpB7N\u002BAGi\u002BtsfMuA4vIQccLQrsfDs11sMTZ4x7moY7E="},{"Name":"label","Value":"_content/UspeshnyiTrader/images/trading-chart.jpg"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"95309"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022bpB7N\u002BAGi\u002BtsfMuA4vIQccLQrsfDs11sMTZ4x7moY7E=\u0022"},{"Name":"Last-Modified","Value":"Fri, 17 Oct 2025 11:34:08 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/UspeshnyiTrader/images/trading-chart.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\trading-chart.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-bpB7N\u002BAGi\u002BtsfMuA4vIQccLQrsfDs11sMTZ4x7moY7E="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"95309"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022bpB7N\u002BAGi\u002BtsfMuA4vIQccLQrsfDs11sMTZ4x7moY7E=\u0022"},{"Name":"Last-Modified","Value":"Fri, 17 Oct 2025 11:34:08 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/UspeshnyiTrader/js/charts.iplcyqrv90.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\charts.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>

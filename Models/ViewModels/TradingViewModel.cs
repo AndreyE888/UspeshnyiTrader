@@ -16,8 +16,8 @@ namespace UspeshnyiTrader.Models.ViewModels
         // For trade form
         public int SelectedInstrumentId { get; set; }
         
-        [Required(ErrorMessage = "Please select a direction")]
-        public TradeDirection Direction { get; set; }
+        [Required(ErrorMessage = "Please select a trade type")]
+        public TradeType TradeType { get; set; } // ✅ МЕНЯЕМ Direction на TradeType
         
         [Required(ErrorMessage = "Please enter an amount")]
         [Range(1, 1000, ErrorMessage = "Amount must be between $1 and $1000")]
@@ -64,7 +64,7 @@ namespace UspeshnyiTrader.Models.ViewModels
         public int InstrumentId { get; set; }
         
         [Required]
-        public TradeDirection Direction { get; set; }
+        public TradeType TradeType { get; set; } // ✅ МЕНЯЕМ
         
         [Required]
         [Range(1, 1000)]
@@ -94,29 +94,29 @@ namespace UspeshnyiTrader.Models.ViewModels
     {
         public int Id { get; set; }
         public string InstrumentSymbol { get; set; } = string.Empty;
-        public TradeDirection Direction { get; set; }
+        public TradeType TradeType { get; set; } // ✅ МЕНЯЕМ
         public decimal Amount { get; set; }
-        public decimal OpenPrice { get; set; }
+        public decimal EntryPrice { get; set; } // ✅ МЕНЯЕМ OpenPrice на EntryPrice
         public decimal CurrentPrice { get; set; }
-        public DateTime OpenTime { get; set; }
-        public DateTime CloseTime { get; set; }
-        public TimeSpan TimeRemaining => CloseTime - DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } // ✅ МЕНЯЕМ OpenTime на CreatedAt
+        public DateTime ExpiryTime { get; set; } // ✅ ДОБАВЛЯЕМ вместо CloseTime
+        public TimeSpan TimeRemaining => ExpiryTime - DateTime.UtcNow;
         public double ProgressPercent 
         { 
             get 
             {
-                var total = (CloseTime - OpenTime).TotalMinutes;
-                var elapsed = (DateTime.UtcNow - OpenTime).TotalMinutes;
+                var total = (ExpiryTime - CreatedAt).TotalMinutes;
+                var elapsed = (DateTime.UtcNow - CreatedAt).TotalMinutes;
                 return Math.Min(100, Math.Max(0, (elapsed / total) * 100));
             }
         }
-        public bool IsExpired => DateTime.UtcNow >= CloseTime;
+        public bool IsExpired => DateTime.UtcNow >= ExpiryTime;
         public decimal? UnrealizedPnl => CalculateUnrealizedPnl();
         
         private decimal? CalculateUnrealizedPnl()
         {
-            var isWon = (Direction == TradeDirection.Up && CurrentPrice > OpenPrice) ||
-                        (Direction == TradeDirection.Down && CurrentPrice < OpenPrice);
+            var isWon = (TradeType == TradeType.Buy && CurrentPrice > EntryPrice) ||
+                        (TradeType == TradeType.Sell && CurrentPrice < EntryPrice);
             return isWon ? Amount * 0.8m : -Amount;
         }
     }
@@ -128,7 +128,7 @@ namespace UspeshnyiTrader.Models.ViewModels
         public DateTime? EndDate { get; set; }
         public TradeStatus? StatusFilter { get; set; }
         public int? InstrumentIdFilter { get; set; }
-        public string SortBy { get; set; } = "OpenTime";
+        public string SortBy { get; set; } = "CreatedAt"; // ✅ МЕНЯЕМ OpenTime на CreatedAt
         public bool SortDescending { get; set; } = true;
         public int Page { get; set; } = 1;
         public int PageSize { get; set; } = 20;
@@ -209,10 +209,50 @@ namespace UspeshnyiTrader.Models.ViewModels
     {
         public DateTime SessionStart { get; set; } = DateTime.UtcNow;
         public List<Trade> SessionTrades { get; set; } = new();
-        public decimal SessionProfitLoss => SessionTrades.Sum(t => t.Payout.HasValue ? t.Payout.Value - t.Amount : -t.Amount);
-        public int SessionWins => SessionTrades.Count(t => t.Status == TradeStatus.Won);
-        public int SessionLosses => SessionTrades.Count(t => t.Status == TradeStatus.Lost);
-        public decimal SessionWinRate => SessionTrades.Count > 0 ? (decimal)SessionWins / SessionTrades.Count * 100 : 0;
+        
+        // ✅ ПЕРЕПИСЫВАЕМ ЛОГИКУ ДЛЯ НОВОЙ МОДЕЛИ
+        public decimal SessionProfitLoss => SessionTrades
+            .Where(t => t.Profit.HasValue)
+            .Sum(t => t.Profit.Value);
+            
+        public int SessionWins => SessionTrades
+            .Count(t => t.Status == TradeStatus.Completed && t.Profit > 0);
+            
+        public int SessionLosses => SessionTrades
+            .Count(t => t.Status == TradeStatus.Completed && t.Profit <= 0);
+            
+        public decimal SessionWinRate => SessionTrades.Count > 0 ? 
+            (decimal)SessionWins / SessionTrades.Count * 100 : 0;
+            
         public TimeSpan SessionDuration => DateTime.UtcNow - SessionStart;
+    }
+
+    // ✅ ДОБАВЛЯЕМ ВСПОМОГАТЕЛЬНЫЙ КЛАСС ДЛЯ РАСЧЕТА СТАТИСТИК
+    public static class TradingStatsCalculator
+    {
+        public static TradingStats CalculateStats(List<Trade> trades)
+        {
+            var completedTrades = trades.Where(t => t.Status == TradeStatus.Completed).ToList();
+            var activeTrades = trades.Where(t => t.Status == TradeStatus.Active).ToList();
+            
+            return new TradingStats
+            {
+                TotalTrades = trades.Count,
+                ActiveTrades = activeTrades.Count,
+                WonTrades = completedTrades.Count(t => t.Profit > 0),
+                LostTrades = completedTrades.Count(t => t.Profit <= 0),
+                
+                TotalInvested = completedTrades.Sum(t => t.Amount),
+                TotalPayout = completedTrades.Where(t => t.Profit.HasValue).Sum(t => t.Profit.Value),
+                
+                TodayTrades = trades.Count(t => t.CreatedAt.Date == DateTime.Today),
+                TodayProfitLoss = completedTrades
+                    .Where(t => t.CreatedAt.Date == DateTime.Today && t.Profit.HasValue)
+                    .Sum(t => t.Profit.Value),
+                    
+                BestTrade = completedTrades.Where(t => t.Profit.HasValue).Max(t => t.Profit.Value),
+                WorstTrade = completedTrades.Where(t => t.Profit.HasValue).Min(t => t.Profit.Value)
+            };
+        }
     }
 }

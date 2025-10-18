@@ -1,0 +1,677 @@
+@{
+    ViewData["Title"] = "Изменения в прайсе";
+}
+
+@section Styles {
+    <style>
+        .price-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+            border-radius: 0 0 30px 30px;
+        }
+
+        .price-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .price-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .instrument-header {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .instrument-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-right: 1rem;
+        }
+
+        .price-change {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .price-change.positive {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .price-change.negative {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        .price-change.neutral {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .price-history {
+            padding: 1.5rem;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .history-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .filters-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            border: 2px solid #e9ecef;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            margin: 0 0.3rem 0.5rem 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .time-filter {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .alert-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            margin-left: 0.5rem;
+        }
+
+        .price-comparison {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .new-price {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .change-arrow {
+            font-size: 1.2rem;
+        }
+
+        .change-arrow.up {
+            color: #27ae60;
+        }
+
+        .change-arrow.down {
+            color: #e74c3c;
+        }
+
+        .notification-toggle {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .notification-bell {
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .notification-bell.active {
+            color: #f39c12;
+            animation: ring 1s ease-in-out;
+        }
+
+        @@keyframes ring {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            75% { transform: rotate(-15deg); }
+        }
+
+        .export-btn {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .export-btn:hover {
+            background: linear-gradient(135deg, #229954, #27ae60);
+            transform: translateY(-2px);
+        }
+
+        .last-update {
+            background: #e8f4fd;
+            border: 1px solid #bee5eb;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        @@media (max-width: 768px) {
+            .price-hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .instrument-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .history-table {
+                font-size: 0.9rem;
+            }
+
+            .history-table th,
+            .history-table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+}
+
+<!-- Hero Section -->
+<section class="price-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold">🔄 Изменения в прайсе</h1>
+                <p class="lead">Отслеживайте актуальные изменения цен на торговые инструменты в реальном времени</p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div style="font-size: 6rem;">📊</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Last Update Info -->
+    <div class="last-update">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <strong>🕒 Последнее обновление:</strong>
+                <span id="lastUpdateTime">@DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")</span>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <button class="btn btn-primary btn-sm" onclick="refreshPrices()">
+                    🔄 Обновить данные
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-section">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h5 class="mb-3">Фильтры:</h5>
+                <div class="mb-3">
+                    <strong>По изменению:</strong>
+                    <div class="time-filter mt-2">
+                        <button class="filter-btn active" onclick="filterChanges('all')">Все</button>
+                        <button class="filter-btn" onclick="filterChanges('positive')">📈 Рост</button>
+                        <button class="filter-btn" onclick="filterChanges('negative')">📉 Падение</button>
+                        <button class="filter-btn" onclick="filterChanges('significant')">⚡ Значительные</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Период:</strong>
+                        <div class="time-filter mt-2">
+                            <button class="filter-btn active">24ч</button>
+                            <button class="filter-btn">7д</button>
+                            <button class="filter-btn">30д</button>
+                        </div>
+                    </div>
+                    <div class="col-6 text-end">
+                        <div class="notification-toggle" onclick="toggleNotifications()">
+                            <span class="notification-bell">🔔</span>
+                            <small class="d-block mt-1">Уведомления</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="stat-number" id="totalInstruments">25</div>
+                <div class="stat-label">Всего инструментов</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="stat-number text-success" id="risingInstruments">15</div>
+                <div class="stat-label">Растущие</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="stat-number text-danger" id="fallingInstruments">8</div>
+                <div class="stat-label">Падающие</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card">
+                <div class="stat-number" id="unchangedInstruments">2</div>
+                <div class="stat-label">Без изменений</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Price Changes List -->
+    <div class="row">
+        <div class="col-12">
+            <!-- EUR/USD -->
+            <div class="price-card" data-change="positive">
+                <div class="instrument-header">
+                    <div class="instrument-icon">€</div>
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1">EUR/USD - Euro vs US Dollar</h5>
+                        <div class="price-comparison">
+                            <span class="old-price">1.0835</span>
+                            <span class="change-arrow up">↗</span>
+                            <span class="new-price">1.0850</span>
+                            <span class="price-change positive">+0.14%</span>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="mb-2">
+                            <span class="badge bg-success">Активно</span>
+                            <span class="alert-badge">NEW</span>
+                        </div>
+                        <small class="text-muted">Обновлено: 2 мин назад</small>
+                    </div>
+                </div>
+                <div class="price-history">
+                    <table class="history-table">
+                        <thead>
+                        <tr>
+                            <th>Время</th>
+                            <th>Цена</th>
+                            <th>Изменение</th>
+                            <th>Объем</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>14:30</td>
+                            <td>1.0850</td>
+                            <td><span class="price-change positive">+0.0015</span></td>
+                            <td>1.2M</td>
+                        </tr>
+                        <tr>
+                            <td>14:15</td>
+                            <td>1.0838</td>
+                            <td><span class="price-change positive">+0.0003</span></td>
+                            <td>890K</td>
+                        </tr>
+                        <tr>
+                            <td>14:00</td>
+                            <td>1.0835</td>
+                            <td><span class="price-change neutral">0.0000</span></td>
+                            <td>1.5M</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GBP/USD -->
+            <div class="price-card" data-change="positive">
+                <div class="instrument-header">
+                    <div class="instrument-icon">£</div>
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1">GBP/USD - British Pound vs US Dollar</h5>
+                        <div class="price-comparison">
+                            <span class="old-price">1.2630</span>
+                            <span class="change-arrow up">↗</span>
+                            <span class="new-price">1.2650</span>
+                            <span class="price-change positive">+0.16%</span>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="mb-2">
+                            <span class="badge bg-success">Активно</span>
+                        </div>
+                        <small class="text-muted">Обновлено: 5 мин назад</small>
+                    </div>
+                </div>
+                <div class="price-history">
+                    <table class="history-table">
+                        <thead>
+                        <tr>
+                            <th>Время</th>
+                            <th>Цена</th>
+                            <th>Изменение</th>
+                            <th>Объем</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>14:25</td>
+                            <td>1.2650</td>
+                            <td><span class="price-change positive">+0.0020</span></td>
+                            <td>950K</td>
+                        </tr>
+                        <tr>
+                            <td>14:10</td>
+                            <td>1.2640</td>
+                            <td><span class="price-change positive">+0.0010</span></td>
+                            <td>1.1M</td>
+                        </tr>
+                        <tr>
+                            <td>13:55</td>
+                            <td>1.2630</td>
+                            <td><span class="price-change neutral">0.0000</span></td>
+                            <td>1.3M</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- USD/JPY -->
+            <div class="price-card" data-change="negative">
+                <div class="instrument-header">
+                    <div class="instrument-icon">¥</div>
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1">USD/JPY - US Dollar vs Japanese Yen</h5>
+                        <div class="price-comparison">
+                            <span class="old-price">148.70</span>
+                            <span class="change-arrow down">↘</span>
+                            <span class="new-price">148.50</span>
+                            <span class="price-change negative">-0.13%</span>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="mb-2">
+                            <span class="badge bg-warning">Волатильность</span>
+                        </div>
+                        <small class="text-muted">Обновлено: 1 мин назад</small>
+                    </div>
+                </div>
+                <div class="price-history">
+                    <table class="history-table">
+                        <thead>
+                        <tr>
+                            <th>Время</th>
+                            <th>Цена</th>
+                            <th>Изменение</th>
+                            <th>Объем</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>14:32</td>
+                            <td>148.50</td>
+                            <td><span class="price-change negative">-0.20</span></td>
+                            <td>2.1M</td>
+                        </tr>
+                        <tr>
+                            <td>14:20</td>
+                            <td>148.60</td>
+                            <td><span class="price-change negative">-0.10</span></td>
+                            <td>1.8M</td>
+                        </tr>
+                        <tr>
+                            <td>14:05</td>
+                            <td>148.70</td>
+                            <td><span class="price-change neutral">0.00</span></td>
+                            <td>1.5M</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- XAU/USD -->
+            <div class="price-card" data-change="positive">
+                <div class="instrument-header">
+                    <div class="instrument-icon">🥇</div>
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1">XAU/USD - Gold vs US Dollar</h5>
+                        <div class="price-comparison">
+                            <span class="old-price">2015.00</span>
+                            <span class="change-arrow up">↗</span>
+                            <span class="new-price">2020.50</span>
+                            <span class="price-change positive">+0.27%</span>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="mb-2">
+                            <span class="badge bg-success">Активно</span>
+                            <span class="alert-badge">HOT</span>
+                        </div>
+                        <small class="text-muted">Обновлено: 3 мин назад</small>
+                    </div>
+                </div>
+                <div class="price-history">
+                    <table class="history-table">
+                        <thead>
+                        <tr>
+                            <th>Время</th>
+                            <th>Цена</th>
+                            <th>Изменение</th>
+                            <th>Объем</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>14:28</td>
+                            <td>2020.50</td>
+                            <td><span class="price-change positive">+2.50</span></td>
+                            <td>850K</td>
+                        </tr>
+                        <tr>
+                            <td>14:15</td>
+                            <td>2018.00</td>
+                            <td><span class="price-change positive">+3.00</span></td>
+                            <td>920K</td>
+                        </tr>
+                        <tr>
+                            <td>14:00</td>
+                            <td>2015.00</td>
+                            <td><span class="price-change neutral">0.00</span></td>
+                            <td>1.1M</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Section -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <div class="p-4 border rounded">
+                <h5>📥 Экспорт данных</h5>
+                <p class="text-muted mb-3">Скачайте историю изменений цен для анализа</p>
+                <div class="btn-group">
+                    <button class="export-btn" onclick="exportData('csv')">📄 CSV</button>
+                    <button class="export-btn" onclick="exportData('excel')">📊 Excel</button>
+                    <button class="export-btn" onclick="exportData('pdf')">📋 PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let notificationsEnabled = false;
+
+        // Фильтрация изменений
+        function filterChanges(type) {
+            const cards = document.querySelectorAll('.price-card');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+
+            // Обновляем активные кнопки
+            filterBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Фильтруем карточки
+            cards.forEach(card => {
+                if (type === 'all' || card.dataset.change === type) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Переключение уведомлений
+        function toggleNotifications() {
+            notificationsEnabled = !notificationsEnabled;
+            const bell = document.querySelector('.notification-bell');
+
+            if (notificationsEnabled) {
+                bell.classList.add('active');
+                showNotification('Уведомления включены', 'success');
+            } else {
+                bell.classList.remove('active');
+                showNotification('Уведомления отключены', 'info');
+            }
+        }
+
+        // Обновление цен
+        function refreshPrices() {
+            const updateTime = document.getElementById('lastUpdateTime');
+            updateTime.textContent = new Date().toLocaleString('ru-RU');
+
+            showNotification('Данные обновлены', 'success');
+
+            // Имитация обновления статистики
+            updateStatistics();
+        }
+
+        // Обновление статистики
+        function updateStatistics() {
+            document.getElementById('risingInstruments').textContent =
+                Math.floor(Math.random() * 5) + 13;
+            document.getElementById('fallingInstruments').textContent =
+                Math.floor(Math.random() * 4) + 6;
+        }
+
+        // Экспорт данных
+        function exportData(format) {
+            showNotification(`Экспорт в ${format.toUpperCase()} начат`, 'info');
+            // В реальном проекте здесь был бы AJAX запрос
+            setTimeout(() => {
+                showNotification(`Файл ${format}.${format} скачан`, 'success');
+            }, 2000);
+        }
+
+        // Показать уведомление
+        function showNotification(message, type) {
+            // В реальном проекте можно использовать Toast библиотеку
+            alert(`${type === 'success' ? '✅' : 'ℹ️'} ${message}`);
+        }
+
+        // Авто-обновление каждые 30 секунд
+        setInterval(refreshPrices, 30000);
+
+        // Анимация появления
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.price-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s ease';
+
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+}

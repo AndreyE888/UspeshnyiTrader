@@ -1,5 +1,7 @@
 using UspeshnyiTrader.Data.Repositories;
 using System.Text;
+using UspeshnyiTrader.Models.Entities;
+
 namespace UspeshnyiTrader.Services;
 
 public class SessionService : ISessionService
@@ -15,7 +17,6 @@ public class SessionService : ISessionService
 
     public void SetCurrentUserId(int userId)
     {
-        // Сохраняем userId + хеш для проверки
         var sessionToken = GenerateSessionToken(userId);
         _httpContextAccessor.HttpContext.Session.SetInt32("UserId", userId);
         _httpContextAccessor.HttpContext.Session.SetString("SessionToken", sessionToken);
@@ -29,7 +30,6 @@ public class SessionService : ISessionService
         if (userId == null || sessionToken == null)
             return null;
 
-        // Проверяем что токен совпадает
         if (sessionToken != GenerateSessionToken(userId.Value))
         {
             Logout();
@@ -50,10 +50,31 @@ public class SessionService : ISessionService
         _httpContextAccessor.HttpContext.Session.Remove("SessionToken");
     }
 
+    public async Task<string> GetCurrentUsernameAsync()
+    {
+        var userId = GetCurrentUserId();
+        if (userId.HasValue && _userRepository != null)
+        {
+            var user = await _userRepository.GetByIdAsync(userId.Value);
+            return user?.Username ?? "User";
+        }
+        return "User";
+    }
+
+    public async Task<decimal> GetCurrentUserBalanceAsync()
+    {
+        var userId = GetCurrentUserId();
+        if (userId.HasValue && _userRepository != null)
+        {
+            var user = await _userRepository.GetByIdAsync(userId.Value);
+            return user?.Balance ?? 0;
+        }
+        return 0;
+    }
+
     private string GenerateSessionToken(int userId)
     {
-        // Создаем токен на основе userId + секретного ключа
-        var secret = "your-secret-key-change-this"; // Поместите в appsettings.json
+        var secret = "your-secret-key-change-this";
         using var hmac = new System.Security.Cryptography.HMACSHA256(Encoding.UTF8.GetBytes(secret));
         var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes($"{userId}-{secret}"));
         return Convert.ToBase64String(hash);

@@ -6,27 +6,27 @@ namespace UspeshnyiTrader.Utilities.Helpers
 {
     public static class PriceCalculator
     {
-        private const decimal PayoutMultiplier = 1.8m; // 80% return
+        private const decimal ProfitMultiplier = 0.8m; // 80% return (изменено с 1.8m)
         private const decimal CommissionRate = 0.02m; // 2% commission
 
         /// <summary>
-        /// Calculate potential payout for a trade
+        /// Calculate potential profit for a trade
         /// </summary>
-        public static decimal CalculatePayout(decimal amount, TradeDirection direction, decimal currentPrice, decimal openPrice)
+        public static decimal CalculatePotentialProfit(decimal amount, TradeType tradeType, decimal currentPrice, decimal entryPrice)
         {
-            var isWon = IsTradeWon(direction, currentPrice, openPrice);
-            return isWon ? amount * PayoutMultiplier : 0;
+            var isWon = IsTradeWon(tradeType, currentPrice, entryPrice);
+            return isWon ? amount * ProfitMultiplier : 0; // ✅ Profit вместо Payout
         }
 
         /// <summary>
-        /// Determine if a trade is won based on direction and prices
+        /// Determine if a trade is won based on trade type and prices
         /// </summary>
-        public static bool IsTradeWon(TradeDirection direction, decimal currentPrice, decimal openPrice)
+        public static bool IsTradeWon(TradeType tradeType, decimal currentPrice, decimal entryPrice)
         {
-            return direction switch
+            return tradeType switch
             {
-                TradeDirection.Up => currentPrice > openPrice,
-                TradeDirection.Down => currentPrice < openPrice,
+                TradeType.Buy => currentPrice > entryPrice, // ✅ Buy вместо Up
+                TradeType.Sell => currentPrice < entryPrice, // ✅ Sell вместо Down
                 _ => false
             };
         }
@@ -36,10 +36,10 @@ namespace UspeshnyiTrader.Utilities.Helpers
         /// </summary>
         public static decimal CalculateProfitLoss(Trade trade)
         {
-            if (trade.Status != TradeStatus.Won && trade.Status != TradeStatus.Lost)
+            if (trade.Status != TradeStatus.Completed) // ✅ Completed вместо Won/Lost
                 return 0;
 
-            return trade.Payout.HasValue ? trade.Payout.Value - trade.Amount : -trade.Amount;
+            return trade.Profit.HasValue ? trade.Profit.Value : -trade.Amount; // ✅ Profit вместо Payout
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace UspeshnyiTrader.Utilities.Helpers
         /// </summary>
         public static decimal CalculateTotalProfitLoss(IEnumerable<Trade> trades)
         {
-            return trades.Where(t => t.Status == TradeStatus.Won || t.Status == TradeStatus.Lost)
+            return trades.Where(t => t.Status == TradeStatus.Completed) // ✅ Completed вместо Won/Lost
                         .Sum(CalculateProfitLoss);
         }
 
@@ -65,7 +65,7 @@ namespace UspeshnyiTrader.Utilities.Helpers
         /// </summary>
         public static decimal CalculateROI(Trade trade)
         {
-            if (trade.Status != TradeStatus.Won && trade.Status != TradeStatus.Lost)
+            if (trade.Status != TradeStatus.Completed) // ✅ Completed вместо Won/Lost
                 return 0;
 
             var profitLoss = CalculateProfitLoss(trade);
@@ -77,7 +77,7 @@ namespace UspeshnyiTrader.Utilities.Helpers
         /// </summary>
         public static decimal CalculateAverageProfit(IEnumerable<Trade> trades)
         {
-            var completedTrades = trades.Where(t => t.Status == TradeStatus.Won || t.Status == TradeStatus.Lost).ToList();
+            var completedTrades = trades.Where(t => t.Status == TradeStatus.Completed).ToList(); // ✅ Completed
             if (!completedTrades.Any()) return 0;
 
             return completedTrades.Average(CalculateProfitLoss);
@@ -86,10 +86,10 @@ namespace UspeshnyiTrader.Utilities.Helpers
         /// <summary>
         /// Calculate the risk/reward ratio for a potential trade
         /// </summary>
-        public static decimal CalculateRiskRewardRatio(decimal amount, decimal potentialPayout)
+        public static decimal CalculateRiskRewardRatio(decimal amount, decimal potentialProfit)
         {
             if (amount == 0) return 0;
-            return potentialPayout / amount;
+            return potentialProfit / amount;
         }
 
         /// <summary>
@@ -208,9 +208,6 @@ namespace UspeshnyiTrader.Utilities.Helpers
         /// <summary>
         /// Calculate the probability of price reaching a target
         /// </summary>
-        /// <summary>
-        /// Calculate the probability of price reaching a target
-        /// </summary>
         public static decimal CalculateProbabilityOfReachingTarget(decimal currentPrice, decimal targetPrice, decimal volatility, int timePeriods)
         {
             if (volatility == 0) return currentPrice >= targetPrice ? 1m : 0m;
@@ -222,6 +219,41 @@ namespace UspeshnyiTrader.Utilities.Helpers
             var probability = (decimal)(1.0 / (1.0 + Math.Exp(-(double)standardDeviations)));
     
             return targetPrice > currentPrice ? probability : 1 - probability;
+        }
+
+        // ✅ ДОБАВЛЯЕМ НОВЫЕ МЕТОДЫ ДЛЯ ТЕКУЩЕЙ МОДЕЛИ
+
+        /// <summary>
+        /// Calculate if trade would be profitable with current price
+        /// </summary>
+        public static bool WouldTradeBeProfitable(Trade trade, decimal currentPrice)
+        {
+            if (trade.Status != TradeStatus.Active) return false;
+
+            return IsTradeWon(trade.Type, currentPrice, trade.EntryPrice);
+        }
+
+        /// <summary>
+        /// Calculate unrealized PnL for active trade
+        /// </summary>
+        public static decimal CalculateUnrealizedPnL(Trade trade, decimal currentPrice)
+        {
+            if (trade.Status != TradeStatus.Active) return 0;
+
+            var isWon = IsTradeWon(trade.Type, currentPrice, trade.EntryPrice);
+            return isWon ? trade.Amount * ProfitMultiplier : -trade.Amount;
+        }
+
+        /// <summary>
+        /// Calculate success rate for completed trades
+        /// </summary>
+        public static (int successful, int total, decimal rate) CalculateSuccessRate(IEnumerable<Trade> trades)
+        {
+            var completedTrades = trades.Where(t => t.Status == TradeStatus.Completed).ToList();
+            var successfulTrades = completedTrades.Count(t => t.Profit > 0);
+            var rate = completedTrades.Count > 0 ? (decimal)successfulTrades / completedTrades.Count * 100 : 0;
+
+            return (successfulTrades, completedTrades.Count, rate);
         }
     }
 }

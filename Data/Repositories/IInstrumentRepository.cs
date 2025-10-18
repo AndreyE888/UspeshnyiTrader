@@ -15,5 +15,7 @@ namespace UspeshnyiTrader.Data.Repositories
         Task<bool> ExistsAsync(int id);
         Task<bool> SymbolExistsAsync(string symbol);
         Task SaveAllAsync();
+        Task<int> GetCountAsync();
+        
     }
 }

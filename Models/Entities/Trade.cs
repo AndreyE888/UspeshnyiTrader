@@ -1,43 +1,56 @@
 using System.ComponentModel.DataAnnotations;
-using UspeshnyiTrader.Models.Enums;
 
 namespace UspeshnyiTrader.Models.Entities
 {
+    public enum TradeStatus
+    {
+        Pending,
+        Active, 
+        Completed,
+        Cancelled
+    }
+
+    public enum TradeType
+    {
+        Buy,
+        Sell
+    }
+
     public class Trade
     {
         public int Id { get; set; }
         
         [Required]
         public int UserId { get; set; }
+        public User User { get; set; }
         
         [Required]
         public int InstrumentId { get; set; }
+        public Instrument Instrument { get; set; }
         
         [Required]
-        public TradeDirection Direction { get; set; } // Up/Down
+        public TradeType Type { get; set; }
         
         [Required]
-        [Range(1, 10000)]
-        public decimal Amount { get; set; } // Сумма ставки
+        [Range(0.01, double.MaxValue)]
+        public decimal Amount { get; set; }
         
         [Required]
-        public decimal OpenPrice { get; set; } // Цена при открытии
+        [Range(0.01, double.MaxValue)]
+        public decimal EntryPrice { get; set; }
         
-        public decimal? ClosePrice { get; set; } // Цена при закрытии
+        public decimal? ExitPrice { get; set; }
         
-        [Required]
-        public DateTime OpenTime { get; set; }
-        
-        [Required]
-        public DateTime CloseTime { get; set; } // Время экспирации
+        public decimal? Profit { get; set; }  // ✅ ДОБАВЛЯЕМ
         
         [Required]
-        public TradeStatus Status { get; set; } // Active/Won/Lost
+        public TradeStatus Status { get; set; } = TradeStatus.Active; // ✅ ДОБАВЛЯЕМ
         
-        public decimal? Payout { get; set; } // Выигрыш
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? ClosedAt { get; set; }
         
-        // Navigation properties
-        public User User { get; set; } = null!;
-        public Instrument Instrument { get; set; } = null!;
+        [Required]
+        public DateTime OpenTime { get; set; } = DateTime.UtcNow;
+        public DateTime? CloseTime { get; set; }
     }
 }

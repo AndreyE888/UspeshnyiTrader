@@ -8,20 +8,25 @@ namespace UspeshnyiTrader.Models.Entities
         
         [Required]
         [StringLength(20)]
-        public string Symbol { get; set; } = string.Empty; // "EURUSD", "BTCUSD"
+        public string Symbol { get; set; }
         
         [Required]
         [StringLength(100)]
-        public string Name { get; set; } = string.Empty; // "Euro vs US Dollar"
+        public string Name { get; set; }
         
-        public bool IsActive { get; set; } = true;
-        
+        [Required]
         public decimal CurrentPrice { get; set; }
         
-        public DateTime LastPriceUpdate { get; set; }
-
-        // Navigation properties
-        public List<Candle> Candles { get; set; } = new();
-        public List<Trade> Trades { get; set; } = new();
+        public string Description { get; set; }
+        
+        // НОВОЕ ПОЛЕ: Путь к изображению
+        public string ImageUrl { get; set; } = "/images/instruments/default.png";
+        
+        public bool IsActive { get; set; } = true;
+        public DateTime? LastPriceUpdate { get; set; }
+        
+        // Навигационные свойства
+        public ICollection<Candle> Candles { get; set; } = new List<Candle>();
+        public ICollection<Trade> Trades { get; set; } = new List<Trade>();
     }
 }

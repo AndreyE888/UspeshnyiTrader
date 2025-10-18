@@ -21,6 +21,22 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\hero-trader.jpg",
+      "PackagePath": "staticwebassets\\images\\hero-trader.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\success-story.jpg",
+      "PackagePath": "staticwebassets\\images\\success-story.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\team-photo.jpg",
+      "PackagePath": "staticwebassets\\images\\team-photo.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\trading-chart.jpg",
+      "PackagePath": "staticwebassets\\images\\trading-chart.jpg"
+    },
+    {
       "Id": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\js\\charts.js",
       "PackagePath": "staticwebassets\\js\\charts.js"
     },

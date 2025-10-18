@@ -3,40 +3,432 @@
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Торговля - UspeshnyiTrader</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Торговая платформа - UspeshnyiTrader</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        .nav { background: #2c3e50; padding: 15px; }
-        .nav a { color: white; text-decoration: none; margin: 0 15px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        /* User Info */
+        .user-info {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-info h2 {
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .balance {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+            display: block;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        /* Instruments Grid */
+        .instruments-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .instruments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .instrument-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .instrument-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            border-color: #3498db;
+        }
+
+        .instrument-symbol {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .instrument-name {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .instrument-price {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-change {
+            font-size: 0.9rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .price-change.positive {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .price-change.negative {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        .btn-trade {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .btn-trade:hover {
+            background: linear-gradient(135deg, #2980b9, #1f618d);
+            transform: scale(1.05);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-action {
+            background: white;
+            color: #2c3e50;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-action:hover {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: white;
+            opacity: 0.8;
+            margin-top: 3rem;
+        }
+
+        @@media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .instruments-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-<div class="nav">
-    <a href="/">← На главную</a>
-</div>
-    
-<h1>📈 Торговая платформа</h1>
+<!-- Header -->
+<header class="header">
+    <div class="container">
+        <nav class="nav">
+            <div class="logo">
+                <span>📊</span>
+                UspeshnyiTrader
+            </div>
+            <div class="nav-links">
+                <a href="/">🏠 Главная</a>
+                <a href="/Instruments">📈 Инструменты</a>
+                <a href="/Trading/History">📋 История сделок</a>
+                <a href="/Account">👤 Аккаунт</a>
+                <a href="/Account/Logout">🚪 Выйти</a>
+            </div>
+        </nav>
+    </div>
+</header>
 
-<div class="alert alert-info">
-    <h4>Welcome, @ViewBag.UserName!</h4>
-    <p>Your balance: <strong>$@ViewBag.UserBalance</strong></p>
+<div class="container">
+    <!-- User Info -->
+    <div class="user-info">
+        <h2>Добро пожаловать, @ViewBag.UserName! 👋</h2>
+        <div class="balance">$@ViewBag.UserBalance.ToString("N2")</div>
+        <p>Ваш торговый баланс</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="quick-stats">
+        <div class="stat-card">
+            <span class="stat-number">@(ViewBag.Instruments?.Count ?? 0)</span>
+            <span class="stat-label">Доступных инструментов</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">Торговля</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">98%</span>
+            <span class="stat-label">Эффективность</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">&lt;1с</span>
+            <span class="stat-label">Скорость исполнения</span>
+        </div>
+    </div>
+
+    <!-- Instruments Section -->
+    <section class="instruments-section">
+        <h2 class="section-title">🎯 Торговые инструменты</h2>
+        <div class="instruments-grid">
+            @if (ViewBag.Instruments != null && ViewBag.Instruments.Count > 0)
+            {
+                foreach (var instrument in ViewBag.Instruments)
+                {
+                    <div class="instrument-card" onclick="window.location.href='/Trading/Trade?symbol=@instrument.Symbol'">
+                        <div class="instrument-symbol">@instrument.Symbol</div>
+                        <div class="instrument-name">@instrument.Name</div>
+                        <div class="instrument-price">$@instrument.CurrentPrice.ToString("N4")</div>
+                        <div class="price-change @(instrument.CurrentPrice % 2 == 0 ? "positive" : "negative")">
+                            @(instrument.CurrentPrice % 2 == 0 ? "+0.25%" : "-0.15%")
+                        </div>
+                        <button class="btn-trade">💼 Начать торговлю</button>
+                    </div>
+                }
+            }
+            else
+            {
+                <!-- Демо-инструменты -->
+                <div class="instrument-card" onclick="window.location.href='/Trading/Trade?symbol=EURUSD'">
+                    <div class="instrument-symbol">EUR/USD</div>
+                    <div class="instrument-name">Euro vs US Dollar</div>
+                    <div class="instrument-price">$1.0850</div>
+                    <div class="price-change positive">+0.25%</div>
+                    <button class="btn-trade">💼 Начать торговлю</button>
+                </div>
+                <div class="instrument-card" onclick="window.location.href='/Trading/Trade?symbol=GBPUSD'">
+                    <div class="instrument-symbol">GBP/USD</div>
+                    <div class="instrument-name">British Pound vs US Dollar</div>
+                    <div class="instrument-price">$1.2650</div>
+                    <div class="price-change positive">+0.32%</div>
+                    <button class="btn-trade">💼 Начать торговлю</button>
+                </div>
+                <div class="instrument-card" onclick="window.location.href='/Trading/Trade?symbol=USDJPY'">
+                    <div class="instrument-symbol">USD/JPY</div>
+                    <div class="instrument-name">US Dollar vs Japanese Yen</div>
+                    <div class="instrument-price">¥148.50</div>
+                    <div class="price-change negative">-0.18%</div>
+                    <button class="btn-trade">💼 Начать торговлю</button>
+                </div>
+                <div class="instrument-card" onclick="window.location.href='/Trading/Trade?symbol=XAUUSD'">
+                    <div class="instrument-symbol">XAU/USD</div>
+                    <div class="instrument-name">Gold vs US Dollar</div>
+                    <div class="instrument-price">$2020.50</div>
+                    <div class="price-change positive">+0.45%</div>
+                    <button class="btn-trade">💼 Начать торговлю</button>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <a href="/Trading/History" class="btn-action">📋 История сделок</a>
+        <a href="/Account/Deposit" class="btn-action">💰 Пополнить баланс</a>
+        <a href="/Instruments/PriceChanges" class="btn-action">🔄 Изменения цен</a>
+        <a href="/News" class="btn-action">📰 Торговые новости</a>
+    </div>
 </div>
 
-<p>Выберите инструмент для торговли:</p>
-    
-<div style="margin: 20px 0;">
-    <a href="/Trading/Trade?symbol=EURUSD" style="display: block; padding: 10px; background: #3498db; color: white; text-decoration: none; margin: 5px 0;">
-        EUR/USD - Торговать
-    </a>
-    <a href="/Trading/Trade?symbol=GBPUSD" style="display: block; padding: 10px; background: #3498db; color: white; text-decoration: none; margin: 5px 0;">
-        GBP/USD - Торговать
-    </a>
-    <a href="/Trading/Trade?symbol=USDJPY" style="display: block; padding: 10px; background: #3498db; color: white; text-decoration: none; margin: 5px 0;">
-        USD/JPY - Торговать
-    </a>
-</div>
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 UspeshnyiTrader. Торговая платформа</p>
+        <p>Торгуйте ответственно. Все инвестиции сопряжены с рисками.</p>
+    </div>
+</footer>
+
+<script>
+    // Обновление цен в реальном времени (демо)
+    function updatePrices() {
+        const prices = document.querySelectorAll('.instrument-price');
+        prices.forEach(priceEl => {
+            const currentPrice = parseFloat(priceEl.textContent.replace(/[^\d.]/g, ''));
+            const change = (Math.random() - 0.5) * 0.01; // ±0.5%
+            const newPrice = currentPrice * (1 + change);
+            priceEl.textContent = '$' + newPrice.toFixed(4);
+
+            // Обновляем изменение цены
+            const changeEl = priceEl.nextElementSibling.nextElementSibling;
+            const isPositive = change >= 0;
+            changeEl.textContent = (isPositive ? '+' : '') + (change * 100).toFixed(2) + '%';
+            changeEl.className = `price-change ${isPositive ? 'positive' : 'negative'}`;
+        });
+    }
+
+    // Обновляем цены каждые 5 секунд
+    setInterval(updatePrices, 5000);
+
+    // Анимация появления карточек
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.instrument-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = (index * 0.1) + 's';
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
 </body>
 </html>
-

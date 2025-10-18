@@ -1,4 +1,5 @@
 @model List<UspeshnyiTrader.Models.Entities.Trade>
+@using UspeshnyiTrader.Models.Entities @* Добавляем using для enum'ов *@
 @{
     ViewData["Title"] = "Trade History";
 }
@@ -10,8 +11,8 @@
                 <h1>Trade History</h1>
                 <div class="btn-group">
                     <button class="btn btn-outline-primary active" data-filter="all">All Trades</button>
-                    <button class="btn btn-outline-success" data-filter="won">Won</button>
-                    <button class="btn btn-outline-danger" data-filter="lost">Lost</button>
+                    <button class="btn btn-outline-success" data-filter="completed">Completed</button>
+                    <button class="btn btn-outline-danger" data-filter="cancelled">Cancelled</button>
                     <button class="btn btn-outline-warning" data-filter="active">Active</button>
                 </div>
             </div>
@@ -27,7 +28,7 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h6 class="card-title">Total Trades</h6>
-                            <h3 id="totalTrades">0</h3>
+                            <h3 id="totalTrades">@Model.Count</h3>
                         </div>
                         <div class="align-self-center">
                             <i class="fas fa-chart-bar fa-2x"></i>
@@ -42,7 +43,7 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h6 class="card-title">Won Trades</h6>
-                            <h3 id="wonTrades">0</h3>
+                            <h3 id="wonTrades">@Model.Count(t => t.Status == TradeStatus.Completed && t.Profit > 0)</h3>
                         </div>
                         <div class="align-self-center">
                             <i class="fas fa-trophy fa-2x"></i>
@@ -57,7 +58,7 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h6 class="card-title">Lost Trades</h6>
-                            <h3 id="lostTrades">0</h3>
+                            <h3 id="lostTrades">@Model.Count(t => t.Status == TradeStatus.Completed && t.Profit <= 0)</h3>
                         </div>
                         <div class="align-self-center">
                             <i class="fas fa-times-circle fa-2x"></i>
@@ -72,7 +73,12 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h6 class="card-title">Win Rate</h6>
-                            <h3 id="winRate">0%</h3>
+                            @{
+                                var wonTrades = Model.Count(t => t.Status == TradeStatus.Completed && t.Profit > 0);
+                                var completedTrades = Model.Count(t => t.Status == TradeStatus.Completed);
+                                var winRate = completedTrades > 0 ? (wonTrades * 100.0) / completedTrades : 0;
+                            }
+                            <h3 id="winRate">@winRate.ToString("F1")%</h3>
                         </div>
                         <div class="align-self-center">
                             <i class="fas fa-percentage fa-2x"></i>
@@ -89,23 +95,28 @@
             <div class="card bg-light">
                 <div class="card-body text-center">
                     <h6>Total Invested</h6>
-                    <h4 id="totalInvested" class="text-primary">$0.00</h4>
+                    <h4 id="totalInvested" class="text-primary">$@Model.Sum(t => t.Amount).ToString("F2")</h4>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card bg-light">
                 <div class="card-body text-center">
-                    <h6>Total Payout</h6>
-                    <h4 id="totalPayout" class="text-success">$0.00</h4>
+                    <h6>Total Profit</h6>
+                    @{
+                        var totalProfit = Model.Where(t => t.Profit.HasValue).Sum(t => t.Profit.Value);
+                    }
+                    <h4 id="totalProfit" class="@(totalProfit >= 0 ? "text-success" : "text-danger")">
+                        @(totalProfit >= 0 ? "+" : "")$@Math.Abs(totalProfit).ToString("F2")
+                    </h4>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card bg-light">
                 <div class="card-body text-center">
-                    <h6>Profit/Loss</h6>
-                    <h4 id="profitLoss" class="text-success">$0.00</h4>
+                    <h6>Active Trades</h6>
+                    <h4 id="activeTrades" class="text-warning">@Model.Count(t => t.Status == TradeStatus.Active)</h4>
                 </div>
             </div>
         </div>
@@ -125,87 +136,81 @@
                             <tr>
                                 <th>Date/Time</th>
                                 <th>Instrument</th>
-                                <th>Direction</th>
+                                <th>Type</th>
                                 <th>Amount</th>
-                                <th>Open Price</th>
-                                <th>Close Price</th>
-                                <th>Payout</th>
+                                <th>Entry Price</th>
+                                <th>Exit Price</th>
+                                <th>Profit</th>
                                 <th>Duration</th>
                                 <th>Status</th>
-                                <th>Result</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach (var trade in Model)
                             {
-                                var duration = (trade.CloseTime - trade.OpenTime).TotalMinutes;
-                                var resultClass = trade.Status == UspeshnyiTrader.Models.Enums.TradeStatus.Won ? "text-success" :
-                                    trade.Status == UspeshnyiTrader.Models.Enums.TradeStatus.Lost ? "text-danger" :
-                                    trade.Status == UspeshnyiTrader.Models.Enums.TradeStatus.Active ? "text-warning" : "text-muted";
+                                var duration = trade.ClosedAt.HasValue ? (trade.ClosedAt.Value - trade.CreatedAt).TotalMinutes : 0;
+                                var resultClass = trade.Profit > 0 ? "text-success" :
+                                    trade.Profit < 0 ? "text-danger" : "text-muted";
 
                                 <tr class="trade-row" data-status="@trade.Status.ToString().ToLower()">
                                     <td>
-                                        <small>@trade.OpenTime.ToString("MM/dd HH:mm")</small>
+                                        <small>@trade.CreatedAt.ToString("MM/dd HH:mm")</small>
                                     </td>
                                     <td>
                                         <strong>@trade.Instrument?.Symbol</strong>
                                     </td>
                                     <td>
-                                        @if (trade.Direction == UspeshnyiTrader.Models.Enums.TradeDirection.Up)
+                                        @if (trade.Type == TradeType.Buy)
                                         {
-                                            <span class="badge bg-success">UP</span>
+                                            <span class="badge bg-success">BUY</span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-danger">DOWN</span>
+                                            <span class="badge bg-danger">SELL</span>
                                         }
                                     </td>
                                     <td>
-                                        <strong>@trade.Amount.ToString("C")</strong>
+                                        <strong>$@trade.Amount.ToString("F2")</strong>
                                     </td>
                                     <td>
-                                        <small>@trade.OpenPrice.ToString("F4")</small>
+                                        <small>$@trade.EntryPrice.ToString("F4")</small>
                                     </td>
                                     <td>
-                                        <small>@(trade.ClosePrice?.ToString("F4") ?? "-")</small>
+                                        <small>@(trade.ExitPrice?.ToString("F4") ?? "-")</small>
                                     </td>
                                     <td>
-                                        <strong class="@(trade.Payout > 0 ? "text-success" : "text-muted")">
-                                            @(trade.Payout?.ToString("C") ?? "-")
+                                        <strong class="@resultClass">
+                                            @if (trade.Profit.HasValue)
+                                            {
+                                                @(trade.Profit > 0 ? "+" : "")@($"${trade.Profit.Value.ToString("F2")}")
+                                            }
+                                            else
+                                            {
+                                                <text>-</text>
+                                            }
                                         </strong>
                                     </td>
                                     <td>
-                                        <small>@duration minutes</small>
+                                        <small>@(duration > 0 ? $"{duration:F0} min" : "Active")</small>
                                     </td>
                                     <td>
-                                        @if (trade.Status == UspeshnyiTrader.Models.Enums.TradeStatus.Active)
+                                        @switch (trade.Status)
                                         {
-                                            <span class="badge bg-warning">ACTIVE</span>
+                                            case TradeStatus.Active:
+                                                <span class="badge bg-warning">ACTIVE</span>
+                                                break;
+                                            case TradeStatus.Completed:
+                                                <span class="badge @(trade.Profit > 0 ? "bg-success" : "bg-danger")">
+                                                    @(trade.Profit > 0 ? "WON" : "LOST")
+                                                </span>
+                                                break;
+                                            case TradeStatus.Cancelled:
+                                                <span class="badge bg-secondary">CANCELLED</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-info">@trade.Status</span>
+                                                break;
                                         }
-                                        else if (trade.Status == UspeshnyiTrader.Models.Enums.TradeStatus.Won)
-                                        {
-                                            <span class="badge bg-success">WON</span>
-                                        }
-                                        else if (trade.Status == UspeshnyiTrader.Models.Enums.TradeStatus.Lost)
-                                        {
-                                            <span class="badge bg-danger">LOST</span>
-                                        }
-                                    </td>
-                                    <td>
-                                            <span class="@resultClass fw-bold">
-                                                @if (trade.Status == UspeshnyiTrader.Models.Enums.TradeStatus.Won)
-                                                {
-                                                    <text>+@((trade.Payout - trade.Amount)?.ToString("C"))</text>
-                                                }
-                                                else if (trade.Status == UspeshnyiTrader.Models.Enums.TradeStatus.Lost)
-                                                {
-                                                    <text>-@trade.Amount.ToString("C")</text>
-                                                }
-                                                else
-                                                {
-                                                    <text>Pending</text>
-                                                }
-                                            </span>
                                     </td>
                                 </tr>
                             }
@@ -233,37 +238,8 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            loadStatistics();
             setupFilterButtons();
-
-            // Auto-refresh active trades
-            setInterval(loadStatistics, 10000);
         });
-
-        function loadStatistics() {
-            $.get('/History/GetStats', function(stats) {
-                if (!stats.error) {
-                    $('#totalTrades').text(stats.totalTrades);
-                    $('#wonTrades').text(stats.wonTrades);
-                    $('#lostTrades').text(stats.lostTrades);
-                    $('#winRate').text((stats.winRate * 100).toFixed(1) + '%');
-                    $('#totalInvested').text(formatCurrency(stats.totalInvested));
-                    $('#totalPayout').text(formatCurrency(stats.totalPayout));
-
-                    const profitLoss = stats.profitLoss;
-                    const profitLossElement = $('#profitLoss');
-                    profitLossElement.text(formatCurrency(Math.abs(profitLoss)));
-
-                    if (profitLoss >= 0) {
-                        profitLossElement.removeClass('text-danger').addClass('text-success');
-                        profitLossElement.text('+' + profitLossElement.text());
-                    } else {
-                        profitLossElement.removeClass('text-success').addClass('text-danger');
-                        profitLossElement.text('-' + profitLossElement.text());
-                    }
-                }
-            });
-        }
 
         function setupFilterButtons() {
             $('[data-filter]').click(function() {
@@ -279,16 +255,6 @@
                 } else {
                     $('.trade-row').hide();
                     $(`.trade-row[data-status="${filter}"]`).show();
-                }
-            });
-        }
-
-        // Load detailed history via AJAX for real-time updates
-        function loadDetailedHistory() {
-            $.get('/History/GetUserHistory', function(data) {
-                if (!data.error) {
-                    // You could implement dynamic table updates here
-                    console.log('History updated', data);
                 }
             });
         }

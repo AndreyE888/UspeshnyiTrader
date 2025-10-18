@@ -147,6 +147,38 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// ✅ ДОБАВЛЯЕМ СОЗДАНИЕ АДМИНИСТРАТОРА
+using (var scope = app.Services.CreateScope())
+{
+    var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+    var passwordHasher = new PasswordHasher<User>();
+    
+    var adminUser = await userRepository.GetByUsernameAsync("admin");
+    if (adminUser == null)
+    {
+        adminUser = new User 
+        { 
+            Username = "admin", 
+            Email = "admin@uspeshnyitrader.com",
+            PasswordHash = passwordHasher.HashPassword(null, "admin123"),
+            Balance = 50000,
+            CreatedAt = DateTime.UtcNow,
+            LastLogin = DateTime.UtcNow,
+            IsActive = true
+        };
+        await userRepository.AddAsync(adminUser);
+        Console.WriteLine("🎯 АДМИНИСТРАТОР создан!");
+        Console.WriteLine("👤 Логин: admin");
+        Console.WriteLine("🔑 Пароль: admin123");
+        Console.WriteLine("💼 Баланс: $50,000");
+    }
+    else
+    {
+        Console.WriteLine("✅ Администратор admin уже существует");
+    }
+}
+
+
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSession();

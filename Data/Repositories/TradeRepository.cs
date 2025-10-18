@@ -104,5 +104,55 @@ namespace UspeshnyiTrader.Data.Repositories
         {
             return await _context.Trades.AnyAsync(t => t.Id == id);
         }
+        
+        public async Task<int> GetCountAsync()
+        {
+            return await _context.Trades.CountAsync();
+        }
+
+        public async Task<int> GetActiveCountAsync()
+        {
+            return await _context.Trades
+                .Where(t => t.Status == TradeStatus.Active)
+                .CountAsync();
+        }
+
+        public async Task<int> GetTodayCountAsync()
+        {
+            var today = DateTime.Today;
+            return await _context.Trades
+                .Where(t => t.CreatedAt.Date == today)
+                .CountAsync();
+        }
+
+        public async Task<int> GetSuccessfulTradesCountAsync()
+        {
+            return await _context.Trades
+                .Where(t => t.Status == TradeStatus.Completed && t.Profit > 0)
+                .CountAsync();
+        }
+
+        public async Task<decimal> GetTotalVolumeAsync()
+        {
+            return await _context.Trades
+                .Where(t => t.Status == TradeStatus.Completed)
+                .SumAsync(t => t.Amount);
+        }
+
+        public async Task<decimal> GetPlatformProfitAsync()
+        {
+            // Предположим, что комиссия платформы - 0.1% от объема
+            var totalVolume = await GetTotalVolumeAsync();
+            return totalVolume * 0.001m; // 0.1% комиссия
+        }
+        
+        public async Task<List<Trade>> GetUserTradesAsync(int userId)
+        {
+            return await _context.Trades
+                .Where(t => t.UserId == userId)
+                .Include(t => t.Instrument)
+                .OrderByDescending(t => t.CreatedAt)
+                .ToListAsync();
+        }
     }
 }

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "CL5Lt6TecIapC31bvE3DoWgok4+HulOlB7krBb+pHX4=",
+  "Hash": "gdxVxMt/3DQS+3e2TjGPG6tpvM4spQ6gyYSRB7W0E2Q=",
   "Source": "UspeshnyiTrader",
   "BasePath": "_content/UspeshnyiTrader",
   "Mode": "Default",
@@ -141,6 +141,90 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\hero-trader.jpg",
+      "SourceId": "UspeshnyiTrader",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\",
+      "BasePath": "_content/UspeshnyiTrader",
+      "RelativePath": "images/hero-trader#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "949zhl97dq",
+      "Integrity": "F3LzRDZsTiS6O8ClZu+u8mlLHa96qLISqt4kifnaaYg=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\hero-trader.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\success-story.jpg",
+      "SourceId": "UspeshnyiTrader",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\",
+      "BasePath": "_content/UspeshnyiTrader",
+      "RelativePath": "images/success-story#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "2435cugsvq",
+      "Integrity": "AmM9DRiak14CQMFquyelL9NAFoi0GCfbdrm0zka7AvE=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\success-story.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\team-photo.jpg",
+      "SourceId": "UspeshnyiTrader",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\",
+      "BasePath": "_content/UspeshnyiTrader",
+      "RelativePath": "images/team-photo#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "gtku6zyqh8",
+      "Integrity": "5JY3hNFAxosyJx8vobzew1Yo9eRHAFDTP9+ftBxp67I=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\team-photo.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\trading-chart.jpg",
+      "SourceId": "UspeshnyiTrader",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\",
+      "BasePath": "_content/UspeshnyiTrader",
+      "RelativePath": "images/trading-chart#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "a9q2jj8kra",
+      "Integrity": "bpB7N+AGi+tsfMuA4vIQccLQrsfDs11sMTZ4x7moY7E=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\trading-chart.jpg"
     },
     {
       "Identity": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\js\\charts.js",
@@ -1834,6 +1918,334 @@
         {
           "Name": "integrity",
           "Value": "sha256-Jtxf9L+5ITKRc1gIRl4VbUpGkRNfOBXjYTdhJD4facM="
+        }
+      ]
+    },
+    {
+      "Route": "images/hero-trader.949zhl97dq.jpg",
+      "AssetFile": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\hero-trader.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "117335"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"F3LzRDZsTiS6O8ClZu+u8mlLHa96qLISqt4kifnaaYg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:31:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "949zhl97dq"
+        },
+        {
+          "Name": "label",
+          "Value": "images/hero-trader.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-F3LzRDZsTiS6O8ClZu+u8mlLHa96qLISqt4kifnaaYg="
+        }
+      ]
+    },
+    {
+      "Route": "images/hero-trader.jpg",
+      "AssetFile": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\hero-trader.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "117335"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"F3LzRDZsTiS6O8ClZu+u8mlLHa96qLISqt4kifnaaYg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:31:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-F3LzRDZsTiS6O8ClZu+u8mlLHa96qLISqt4kifnaaYg="
+        }
+      ]
+    },
+    {
+      "Route": "images/success-story.2435cugsvq.jpg",
+      "AssetFile": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\success-story.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "90930"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"AmM9DRiak14CQMFquyelL9NAFoi0GCfbdrm0zka7AvE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:35:19 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "2435cugsvq"
+        },
+        {
+          "Name": "label",
+          "Value": "images/success-story.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-AmM9DRiak14CQMFquyelL9NAFoi0GCfbdrm0zka7AvE="
+        }
+      ]
+    },
+    {
+      "Route": "images/success-story.jpg",
+      "AssetFile": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\success-story.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "90930"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"AmM9DRiak14CQMFquyelL9NAFoi0GCfbdrm0zka7AvE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:35:19 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-AmM9DRiak14CQMFquyelL9NAFoi0GCfbdrm0zka7AvE="
+        }
+      ]
+    },
+    {
+      "Route": "images/team-photo.gtku6zyqh8.jpg",
+      "AssetFile": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\team-photo.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "310394"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"5JY3hNFAxosyJx8vobzew1Yo9eRHAFDTP9+ftBxp67I=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:41:27 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "gtku6zyqh8"
+        },
+        {
+          "Name": "label",
+          "Value": "images/team-photo.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-5JY3hNFAxosyJx8vobzew1Yo9eRHAFDTP9+ftBxp67I="
+        }
+      ]
+    },
+    {
+      "Route": "images/team-photo.jpg",
+      "AssetFile": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\team-photo.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "310394"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"5JY3hNFAxosyJx8vobzew1Yo9eRHAFDTP9+ftBxp67I=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:41:27 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-5JY3hNFAxosyJx8vobzew1Yo9eRHAFDTP9+ftBxp67I="
+        }
+      ]
+    },
+    {
+      "Route": "images/trading-chart.a9q2jj8kra.jpg",
+      "AssetFile": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\trading-chart.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "95309"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"bpB7N+AGi+tsfMuA4vIQccLQrsfDs11sMTZ4x7moY7E=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:34:08 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "a9q2jj8kra"
+        },
+        {
+          "Name": "label",
+          "Value": "images/trading-chart.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-bpB7N+AGi+tsfMuA4vIQccLQrsfDs11sMTZ4x7moY7E="
+        }
+      ]
+    },
+    {
+      "Route": "images/trading-chart.jpg",
+      "AssetFile": "C:\\Users\\Andrey\\Desktop\\my files\\Успешный Трейдер\\UspeshnyiTrader\\UspeshnyiTrader\\wwwroot\\images\\trading-chart.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "95309"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"bpB7N+AGi+tsfMuA4vIQccLQrsfDs11sMTZ4x7moY7E=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:34:08 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-bpB7N+AGi+tsfMuA4vIQccLQrsfDs11sMTZ4x7moY7E="
         }
       ]
     },

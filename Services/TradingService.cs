@@ -23,7 +23,7 @@ namespace UspeshnyiTrader.Services
             _userBalanceRepository = userBalanceRepository;
         }
 
-        public async Task<Trade> OpenTradeAsync(int userId, int instrumentId, TradeDirection direction, decimal amount, int durationMinutes)
+        public async Task<Trade> OpenTradeAsync(int userId, int instrumentId, TradeType tradeType, decimal amount, int durationMinutes)
         {
             // Validate user and balance
             var user = await _userRepository.GetByIdAsync(userId);
@@ -43,11 +43,10 @@ namespace UspeshnyiTrader.Services
             {
                 UserId = userId,
                 InstrumentId = instrumentId,
-                Direction = direction,
+                Type = tradeType, // ✅ МЕНЯЕМ Direction на Type
                 Amount = amount,
-                OpenPrice = instrument.CurrentPrice,
-                OpenTime = DateTime.UtcNow,
-                CloseTime = DateTime.UtcNow.AddMinutes(durationMinutes),
+                EntryPrice = instrument.CurrentPrice, // ✅ МЕНЯЕМ OpenPrice на EntryPrice
+                CreatedAt = DateTime.UtcNow, // ✅ МЕНЯЕМ OpenTime на CreatedAt
                 Status = TradeStatus.Active
             };
 
@@ -60,7 +59,7 @@ namespace UspeshnyiTrader.Services
             {
                 UserId = userId,
                 Amount = -amount,
-                Description = $"Trade opened: {instrument.Symbol} {direction}",
+                Description = $"Trade opened: {instrument.Symbol} {tradeType}",
                 BalanceAfter = user.Balance,
                 Date = DateTime.UtcNow
             };
@@ -83,34 +82,37 @@ namespace UspeshnyiTrader.Services
             if (instrument == null || user == null)
                 return;
 
-            // Determine if trade is won or lost
-            trade.ClosePrice = instrument.CurrentPrice;
-            var isWon = (trade.Direction == TradeDirection.Up && trade.ClosePrice > trade.OpenPrice) ||
-                        (trade.Direction == TradeDirection.Down && trade.ClosePrice < trade.OpenPrice);
-
-            trade.Status = isWon ? TradeStatus.Won : TradeStatus.Lost;
+            // ✅ ПЕРЕПИСЫВАЕМ ЛОГИКУ ДЛЯ НОВОЙ МОДЕЛИ
+            trade.ExitPrice = instrument.CurrentPrice; // ✅ МЕНЯЕМ ClosePrice на ExitPrice
             
-            // Calculate payout (80% return for win, 0 for loss)
-            trade.Payout = isWon ? trade.Amount * 1.8m : 0;
+            // Determine if trade is won or lost based on TradeType
+            var isWon = (trade.Type == TradeType.Buy && trade.ExitPrice > trade.EntryPrice) ||
+                        (trade.Type == TradeType.Sell && trade.ExitPrice < trade.EntryPrice);
+
+            trade.Status = TradeStatus.Completed; // ✅ МЕНЯЕМ Won/Lost на Completed
+            
+            // Calculate profit (80% return for win, 0 for loss)
+            trade.Profit = isWon ? trade.Amount * 0.8m : 0; // ✅ МЕНЯЕМ Payout на Profit
 
             // Update user balance
             if (isWon)
             {
-                user.Balance += trade.Payout.Value;
+                user.Balance += trade.Profit.Value;
                 await _userRepository.UpdateAsync(user);
 
                 // Add balance history record for win
                 var balanceRecord = new UserBalance
                 {
                     UserId = user.Id,
-                    Amount = trade.Payout.Value,
-                    Description = $"Trade won: {instrument.Symbol}",
+                    Amount = trade.Profit.Value,
+                    Description = $"Trade completed: {instrument.Symbol} - Profit",
                     BalanceAfter = user.Balance,
                     Date = DateTime.UtcNow
                 };
                 await _userBalanceRepository.AddAsync(balanceRecord);
             }
 
+            trade.ClosedAt = DateTime.UtcNow; // ✅ ДОБАВЛЯЕМ время закрытия
             await _tradeRepository.UpdateAsync(trade);
         }
 
@@ -123,12 +125,12 @@ namespace UspeshnyiTrader.Services
             }
         }
 
-        public async Task<decimal> CalculatePayoutAsync(decimal amount, TradeDirection direction, decimal currentPrice, decimal openPrice)
+        public async Task<decimal> CalculatePotentialProfitAsync(decimal amount, TradeType tradeType, decimal currentPrice, decimal entryPrice)
         {
-            var isWon = (direction == TradeDirection.Up && currentPrice > openPrice) ||
-                        (direction == TradeDirection.Down && currentPrice < openPrice);
+            var isWon = (tradeType == TradeType.Buy && currentPrice > entryPrice) ||
+                        (tradeType == TradeType.Sell && currentPrice < entryPrice);
             
-            return isWon ? amount * 1.8m : 0;
+            return isWon ? amount * 0.8m : 0; // ✅ МЕНЯЕМ Payout на Profit
         }
 
         public async Task<bool> CanUserTradeAsync(int userId, decimal amount)
@@ -145,6 +147,42 @@ namespace UspeshnyiTrader.Services
         public async Task<List<Trade>> GetActiveTradesAsync()
         {
             return await _tradeRepository.GetActiveTradesAsync();
+        }
+
+        // ✅ ДОБАВЛЯЕМ НОВЫЕ МЕТОДЫ ДЛЯ РАБОТЫ С ТЕКУЩЕЙ МОДЕЛЬЮ
+
+        public async Task<decimal> GetUserBalanceAsync(int userId)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            return user?.Balance ?? 0;
+        }
+
+        public async Task<List<Trade>> GetUserCompletedTradesAsync(int userId)
+        {
+            var allTrades = await _tradeRepository.GetByUserIdAsync(userId);
+            return allTrades.Where(t => t.Status == TradeStatus.Completed).ToList();
+        }
+
+        public async Task<Dictionary<string, object>> GetTradingStatsAsync(int userId)
+        {
+            var trades = await GetUserTradesAsync(userId);
+            var completedTrades = trades.Where(t => t.Status == TradeStatus.Completed).ToList();
+            
+            var totalTrades = trades.Count;
+            var wonTrades = completedTrades.Count(t => t.Profit > 0);
+            var lostTrades = completedTrades.Count(t => t.Profit <= 0);
+            var activeTrades = trades.Count(t => t.Status == TradeStatus.Active);
+
+            return new Dictionary<string, object>
+            {
+                ["TotalTrades"] = totalTrades,
+                ["WonTrades"] = wonTrades,
+                ["LostTrades"] = lostTrades,
+                ["ActiveTrades"] = activeTrades,
+                ["WinRate"] = totalTrades > 0 ? (decimal)wonTrades / totalTrades * 100 : 0,
+                ["TotalInvested"] = completedTrades.Sum(t => t.Amount),
+                ["TotalProfit"] = completedTrades.Where(t => t.Profit.HasValue).Sum(t => t.Profit.Value)
+            };
         }
     }
 }

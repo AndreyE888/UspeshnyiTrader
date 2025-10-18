@@ -413,6 +413,334 @@
       ]
     },
     {
+      "Route": "images/hero-trader.949zhl97dq.jpg",
+      "AssetFile": "images/hero-trader.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "117335"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"F3LzRDZsTiS6O8ClZu+u8mlLHa96qLISqt4kifnaaYg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:31:18 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "949zhl97dq"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-F3LzRDZsTiS6O8ClZu+u8mlLHa96qLISqt4kifnaaYg="
+        },
+        {
+          "Name": "label",
+          "Value": "images/hero-trader.jpg"
+        }
+      ]
+    },
+    {
+      "Route": "images/hero-trader.jpg",
+      "AssetFile": "images/hero-trader.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "117335"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"F3LzRDZsTiS6O8ClZu+u8mlLHa96qLISqt4kifnaaYg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:31:18 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-F3LzRDZsTiS6O8ClZu+u8mlLHa96qLISqt4kifnaaYg="
+        }
+      ]
+    },
+    {
+      "Route": "images/success-story.2435cugsvq.jpg",
+      "AssetFile": "images/success-story.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "90930"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"AmM9DRiak14CQMFquyelL9NAFoi0GCfbdrm0zka7AvE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:35:19 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "2435cugsvq"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-AmM9DRiak14CQMFquyelL9NAFoi0GCfbdrm0zka7AvE="
+        },
+        {
+          "Name": "label",
+          "Value": "images/success-story.jpg"
+        }
+      ]
+    },
+    {
+      "Route": "images/success-story.jpg",
+      "AssetFile": "images/success-story.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "90930"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"AmM9DRiak14CQMFquyelL9NAFoi0GCfbdrm0zka7AvE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:35:19 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-AmM9DRiak14CQMFquyelL9NAFoi0GCfbdrm0zka7AvE="
+        }
+      ]
+    },
+    {
+      "Route": "images/team-photo.gtku6zyqh8.jpg",
+      "AssetFile": "images/team-photo.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "310394"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"5JY3hNFAxosyJx8vobzew1Yo9eRHAFDTP9+ftBxp67I=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:41:27 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "gtku6zyqh8"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-5JY3hNFAxosyJx8vobzew1Yo9eRHAFDTP9+ftBxp67I="
+        },
+        {
+          "Name": "label",
+          "Value": "images/team-photo.jpg"
+        }
+      ]
+    },
+    {
+      "Route": "images/team-photo.jpg",
+      "AssetFile": "images/team-photo.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "310394"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"5JY3hNFAxosyJx8vobzew1Yo9eRHAFDTP9+ftBxp67I=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:41:27 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-5JY3hNFAxosyJx8vobzew1Yo9eRHAFDTP9+ftBxp67I="
+        }
+      ]
+    },
+    {
+      "Route": "images/trading-chart.a9q2jj8kra.jpg",
+      "AssetFile": "images/trading-chart.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "95309"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"bpB7N+AGi+tsfMuA4vIQccLQrsfDs11sMTZ4x7moY7E=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:34:08 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "a9q2jj8kra"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-bpB7N+AGi+tsfMuA4vIQccLQrsfDs11sMTZ4x7moY7E="
+        },
+        {
+          "Name": "label",
+          "Value": "images/trading-chart.jpg"
+        }
+      ]
+    },
+    {
+      "Route": "images/trading-chart.jpg",
+      "AssetFile": "images/trading-chart.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "95309"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"bpB7N+AGi+tsfMuA4vIQccLQrsfDs11sMTZ4x7moY7E=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 17 Oct 2025 11:34:08 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-bpB7N+AGi+tsfMuA4vIQccLQrsfDs11sMTZ4x7moY7E="
+        }
+      ]
+    },
+    {
       "Route": "js/charts.iplcyqrv90.js",
       "AssetFile": "js/charts.js",
       "Selectors": [],

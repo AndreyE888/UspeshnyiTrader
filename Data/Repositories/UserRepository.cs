@@ -86,5 +86,26 @@ namespace UspeshnyiTrader.Data.Repositories
         {
             return await _context.Users.AnyAsync(u => u.Email == email);
         }
+        
+        public async Task<int> GetCountAsync()
+        {
+            return await _context.Users.CountAsync();
+        }
+
+        public async Task<int> GetNewUsersTodayCountAsync()
+        {
+            var today = DateTime.Today;
+            return await _context.Users
+                .Where(u => u.CreatedAt.Date == today)
+                .CountAsync();
+        }
+
+        public async Task<decimal> GetTotalDepositsAsync()
+        {
+            // Если у пользователя есть поле Balance, считаем общий баланс
+            return await _context.Users
+                .Where(u => u.IsActive)
+                .SumAsync(u => u.Balance);
+        }
     }
 }

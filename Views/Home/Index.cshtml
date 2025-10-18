@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UspeshnyiTrader - Торговая платформа от Ефимова Андрея</title>
+    <title>UspeshnyiTrader - Торговая платформа</title>
     <style>
         * {
             margin: 0;
@@ -60,7 +60,7 @@
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             align-items: center;
         }
 
@@ -78,29 +78,86 @@
             color: white;
         }
 
-        .btn-trading {
-            background: linear-gradient(135deg, #48bb78, #38a169);
+        .btn-login {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             padding: 0.75rem 1.5rem;
             border-radius: 8px;
             font-weight: 600;
         }
 
+        /* Баннер */
+        .banner {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            margin: 1rem 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Быстрая навигация */
+        .quick-nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .btn-nav {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.2rem;
+            text-align: center;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 80px;
+        }
+
+        .btn-nav:nth-child(2) {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .btn-nav:nth-child(3) {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+        }
+
+        .btn-nav:nth-child(4) {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+        }
+
+        .btn-nav:nth-child(5) {
+            background: linear-gradient(135deg, #ed64a6, #d53f8c);
+        }
+
+        .btn-nav:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
         /* Hero Section */
         .hero {
             text-align: center;
-            padding: 4rem 0;
+            padding: 3rem 0;
             color: white;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
+            font-size: 2.8rem;
             margin-bottom: 1rem;
             font-weight: 700;
         }
 
         .hero p {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             margin-bottom: 2rem;
             opacity: 0.9;
         }
@@ -108,42 +165,83 @@
         .stats {
             display: flex;
             justify-content: center;
-            gap: 3rem;
+            gap: 2rem;
             margin-top: 2rem;
         }
 
         .stat-item {
             background: rgba(255, 255, 255, 0.1);
-            padding: 1.5rem;
+            padding: 1.2rem;
             border-radius: 12px;
             backdrop-filter: blur(10px);
         }
 
         .stat-number {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             display: block;
         }
 
-        /* Instruments Section */
-        .instruments-section {
+        /* Новости */
+        .news-section {
             background: white;
             border-radius: 20px;
-            padding: 3rem;
+            padding: 2rem;
             margin: 2rem 0;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
         .section-title {
             text-align: center;
-            font-size: 2.2rem;
-            margin-bottom: 2rem;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
             color: #2d3748;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .news-card {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .news-date {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .news-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+        }
+
+        /* Instruments Section */
+        .instruments-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
         .instruments-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -165,14 +263,14 @@
         }
 
         .instrument-symbol {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: bold;
             color: #2d3748;
             margin-bottom: 0.5rem;
         }
 
         .instrument-price {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #48bb78;
             margin-bottom: 1rem;
@@ -231,19 +329,28 @@
         }
 
         @@media (max-width: 768px) {
-        .nav {
-            flex-direction: column;
-            gap: 1rem;
-        }
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
 
-        .hero h1 {
-            font-size: 2.5rem;
-        }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
 
-        .stats {
-            flex-direction: column;
-            gap: 1rem;
-        }
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .quick-nav-buttons {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -257,33 +364,51 @@
                 UspeshnyiTrader
             </div>
             <div class="nav-links">
-                <a href="/">Главная</a>
-                <a href="/Trading" class="btn-trading">📈 Начать торговлю</a>
+                <a href="/">🏠 Главная</a>
+                <a href="@Url.Action("Index", "News")">📰 Новости</a>
+                <a href="@Url.Action("Index", "Instruments")">📊 Инструменты</a>
+                <a href="@Url.Action("About", "Company")">🏢 О компании</a>
+                <a href="@Url.Action("Index", "Trading")">💼 Торговля</a>
+                <a href="@Url.Action("Contact", "Company")">📞 Контакты</a>
+                <a href="@Url.Action("Login", "Account")" class="btn-login">👤 Войти</a>
             </div>
         </nav>
     </div>
 </header>
 
+<!-- Баннер -->
 <div class="container">
-    <div class="quick-nav-buttons" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; padding: 0 20px;">
-        <a href="@Url.Action("Index", "Instruments")" class="btn-nav" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.2rem; text-align: center; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 1.2rem; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px;">
+    <div class="banner">
+        <strong>🎉 Специальное предложение!</strong> Начните торговать с бонусом +50% к первому депозиту!
+    </div>
+</div>
+
+<!-- Быстрая навигация -->
+<div class="container">
+    <div class="quick-nav-buttons">
+        <a href="@Url.Action("Index", "Instruments")" class="btn-nav">
             📊 Все инструменты
         </a>
-        <a href="@Url.Action("Index", "Trading")" class="btn-nav" style="background: linear-gradient(135deg, #48bb78, #38a169); color: white; padding: 1.2rem; text-align: center; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 1.2rem; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <a href="@Url.Action("Index", "Trading")" class="btn-nav">
             💼 Начать торговлю
         </a>
-        <a href="@Url.Action("Login", "Account")" class="btn-nav" style="background: linear-gradient(135deg, #ed8936, #dd6b20); color: white; padding: 1.2rem; text-align: center; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 1.2rem; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px;">
-            👤 Мой аккаунт
+        <a href="@Url.Action("Index", "News")" class="btn-nav">
+            📰 Последние новости
+        </a>
+        <a href="@Url.Action("PriceChanges", "Instruments")" class="btn-nav">
+            🔄 Изменения в прайсе
+        </a>
+        <a href="@Url.Action("Events", "Company")" class="btn-nav">
+            🎉 Праздники и события
         </a>
     </div>
 </div>
 
-
 <!-- Hero Section -->
 <section class="hero">
     <div class="container">
-        <h1>Торговая платформа будущего от Успешного Трейдера Ефимова Андрея</h1>
-        <p>Профессиональные инструменты для успешной торговли бинарными опционами</p>
+        <h1>Торговая платформа будущего</h1>
+        <p>Профессиональные инструменты для успешной торговли</p>
 
         <div class="stats">
             <div class="stat-item">
@@ -302,12 +427,46 @@
     </div>
 </section>
 
-<!-- Instruments Section -->
 <div class="container">
-    <section class="instruments-section">
-        <h2 class="section-title">Популярные инструменты</h2>
+    <section class="success-trader-section">
+        <h2 class="section-title">🎯 История успеха</h2>
+        <div class="trader-story">
+            <img src="/images/success-story.jpg" alt="Успешный трейдер" class="trader-photo">
+            <div class="trader-info">
+                <h3>Максим Иванов</h3>
+                <p>Профессиональный трейдер с 8-летним опытом</p>
+                <p>"Благодаря платформе UspeshnyiTrader увеличил депозит в 3 раза за год"</p>
+            </div>
+        </div>
+    </section>
+</div>
 
-     
+<div class="container">
+    <!-- Новости -->
+    <section class="news-section">
+        <h2 class="section-title">📰 Последние новости</h2>
+        <div class="news-grid">
+            <div class="news-card">
+                <div class="news-date">15.12.2024</div>
+                <h3 class="news-title">Запуск новой торговой платформы</h3>
+                <p>Представляем обновленный интерфейс с улучшенной производительностью</p>
+            </div>
+            <div class="news-card">
+                <div class="news-date">10.12.2024</div>
+                <h3 class="news-title">Добавлены новые торговые инструменты</h3>
+                <p>Расширяем список доступных активов для диверсификации портфеля</p>
+            </div>
+            <div class="news-card">
+                <div class="news-date">05.12.2024</div>
+                <h3 class="news-title">Обновление мобильного приложения</h3>
+                <p>Новая версия приложения с улучшенным UX/UI дизайном</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instruments Section -->
+    <section class="instruments-section">
+        <h2 class="section-title">📊 Популярные инструменты</h2>
         <div class="instruments-grid">
             @if (ViewBag.Instruments != null && ViewBag.Instruments.Count > 0)
             {
@@ -376,28 +535,21 @@
 <footer class="footer">
     <div class="container">
         <p>&copy; 2024 UspeshnyiTrader. Все права защищены.</p>
+        <p>Контактная информация: info@uspeshnyitrader.ru | +7 (999) 123-45-67</p>
     </div>
 </footer>
-
-
-<div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0;">
-    @ViewBag.Message
-</div>
 
 <script>
     function tradeInstrument(symbol) {
         window.location.href = '/Trading/Trade?symbol=' + symbol;
     }
 
-    // Анимация появления элементов
     document.addEventListener('DOMContentLoaded', function() {
         const cards = document.querySelectorAll('.instrument-card');
         cards.forEach((card, index) => {
             card.style.animationDelay = (index * 0.1) + 's';
-            card.classList.add('fade-in');
         });
     });
-    
 </script>
 </body>
 </html>

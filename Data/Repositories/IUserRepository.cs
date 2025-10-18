@@ -15,5 +15,9 @@ namespace UspeshnyiTrader.Data.Repositories
         Task<bool> ExistsAsync(int id);
         Task<bool> UsernameExistsAsync(string username);
         Task<bool> EmailExistsAsync(string email);
+        Task<int> GetCountAsync();
+        
+        Task<int> GetNewUsersTodayCountAsync();
+        Task<decimal> GetTotalDepositsAsync();
     }
 }

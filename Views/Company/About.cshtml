@@ -1,0 +1,455 @@
+@{
+    ViewData["Title"] = "О компании";
+}
+
+@section Styles {
+    <style>
+        .about-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+            border-radius: 0 0 30px 30px;
+        }
+
+        .section-title {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .about-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .about-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .mission-icon { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
+        .vision-icon { background: linear-gradient(135deg, #48dbfb, #0abde3); }
+        .values-icon { background: linear-gradient(135deg, #1dd1a1, #10ac84); }
+
+        .team-member {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .member-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 4rem 0;
+            border-radius: 20px;
+            margin: 3rem 0;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #3498db;
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            width: 45%;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-right: auto;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            background: #3498db;
+            border-radius: 50%;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            left: -10px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::before {
+            right: -10px;
+        }
+
+        .contact-info {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-right: 1rem;
+        }
+
+        @@media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+            }
+
+            .timeline-content::before {
+                left: -40px !important;
+            }
+
+            .about-hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+}
+
+<!-- Hero Section -->
+<section class="about-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold">🏢 О компании UspeshnyiTrader</h1>
+                <p class="lead mb-4">Ведущая торговая платформа, созданная для успеха каждого трейдера</p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <span class="badge bg-light text-dark fs-6 p-2">📅 Основана в 2024</span>
+                    <span class="badge bg-light text-dark fs-6 p-2">👥 10 000+ пользователей</span>
+                    <span class="badge bg-light text-dark fs-6 p-2">🌍 Международная платформа</span>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <img src="/images/team-photo.jpg" alt="Наша команда UspeshnyiTrader"
+                     class="img-fluid rounded-3 shadow-lg"
+                     style="max-height: 300px; object-fit: cover;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Mission, Vision, Values -->
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="about-card text-center p-4">
+                <div class="icon-wrapper mission-icon">
+                    🎯
+                </div>
+                <h3>Миссия</h3>
+                <p class="text-muted">
+                    Сделать торговлю финансовыми инструментами доступной, понятной и успешной
+                    для каждого человека, независимо от уровня подготовки.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="about-card text-center p-4">
+                <div class="icon-wrapper vision-icon">
+                    🔭
+                </div>
+                <h3>Видение</h3>
+                <p class="text-muted">
+                    Стать самой инновационной и надежной торговой платформой в Восточной Европе,
+                    обеспечивающей лучшие условия для трейдеров.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="about-card text-center p-4">
+                <div class="icon-wrapper values-icon">
+                    💎
+                </div>
+                <h3>Ценности</h3>
+                <p class="text-muted">
+                    Прозрачность, инновации, безопасность и постоянное развитие.
+                    Мы ставим интересы клиентов на первое место.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <section class="stats-section">
+        <div class="container">
+            <h2 class="section-title text-white">Наши достижения</h2>
+            <div class="row text-center">
+                <div class="col-md-3 mb-4">
+                    <div class="stat-number">10K+</div>
+                    <div class="stat-label">Активных трейдеров</div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Торговых инструментов</div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Время безотказной работы</div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Поддержка клиентов</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Story -->
+    <section class="mb-5">
+        <h2 class="section-title">Наша история</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h4>🎉 Основание компании</h4>
+                    <div class="text-muted mb-2">Январь 2024</div>
+                    <p>Ефимов Андрей основал UspeshnyiTrader с целью создания современной и доступной торговой платформы.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h4>🚀 Запуск платформы</h4>
+                    <div class="text-muted mb-2">Март 2024</div>
+                    <p>Успешный запуск первой версии торговой платформы с базовым набором инструментов.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h4>📈 Рост сообщества</h4>
+                    <div class="text-muted mb-2">Июль 2024</div>
+                    <p>Достигнута отметка в 5,000 зарегистрированных пользователей и добавлены новые торговые инструменты.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h4>🌍 Международное расширение</h4>
+                    <div class="text-muted mb-2">Декабрь 2024</div>
+                    <p>Запуск многоязычной версии платформы и расширение на международные рынки.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team -->
+    <section class="mb-5">
+        <h2 class="section-title">Наша команда</h2>
+        <div class="row mb-4">
+            <div class="col-12">
+                <img src="/images/team-photo.jpg" alt="Вся наша команда UspeshnyiTrader"
+                     class="img-fluid rounded-3 shadow"
+                     style="width: 100%; height: 400px; object-fit: cover;">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-lg-3">
+                <div class="about-card team-member">
+                    <div class="member-photo">
+                        👨‍💼
+                    </div>
+                    <h4>Ефимов Андрей</h4>
+                    <p class="text-muted">Основатель & CEO</p>
+                    <p>Опыт в трейдинге: 5+ лет. Специализация: алгоритмическая торговля.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="about-card team-member">
+                    <div class="member-photo">
+                        👩‍💻
+                    </div>
+                    <h4>Мария Иванова</h4>
+                    <p class="text-muted">CTO</p>
+                    <p>Разработка высоконагруженных систем. Опыт: 8+ лет.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="about-card team-member">
+                    <div class="member-photo">
+                        👨‍🎓
+                    </div>
+                    <h4>Алексей Петров</h4>
+                    <p class="text-muted">Главный аналитик</p>
+                    <p>Финансовый аналитик с опытом работы в крупных банках.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="about-card team-member">
+                    <div class="member-photo">
+                        👩‍💼
+                    </div>
+                    <h4>Ольга Сидорова</h4>
+                    <p class="text-muted">Руководитель поддержки</p>
+                    <p>Обеспечение качественного сервиса для наших клиентов.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Info -->
+    <section class="mb-5">
+        <h2 class="section-title">Контактная информация</h2>
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">🏢</div>
+                        <div>
+                            <h5 class="mb-1">Адрес офиса</h5>
+                            <p class="mb-0 text-muted">г. Москва, ул. Торговая, д. 123, офис 45</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <div>
+                            <h5 class="mb-1">Телефон</h5>
+                            <p class="mb-0 text-muted">+7 (999) 123-45-67</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">✉️</div>
+                        <div>
+                            <h5 class="mb-1">Email</h5>
+                            <p class="mb-0 text-muted">info@uspeshnyitrader.ru</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">🕒</div>
+                        <div>
+                            <h5 class="mb-1">Время работы</h5>
+                            <p class="mb-0 text-muted">Пн-Пт: 9:00-18:00, Сб-Вс: 10:00-16:00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="about-card h-100 d-flex align-items-center justify-content-center">
+                    <div class="text-center">
+                        <div style="font-size: 4rem;">🗺️</div>
+                        <h5>Карта проезда</h5>
+                        <p class="text-muted">Будет добавлена в ближайшее обновление</p>
+                        <button class="btn btn-primary mt-2">Посмотреть на карте</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        // Анимация появления элементов при скролле
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Наблюдаем за карточками и временной шкалой
+            document.querySelectorAll('.about-card, .timeline-content, .contact-item').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.6s ease';
+                observer.observe(el);
+            });
+        });
+    </script>
+}

@@ -100,10 +100,18 @@ namespace UspeshnyiTrader.Migrations
                     b.Property<decimal>("CurrentPrice")
                         .HasColumnType("numeric");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastPriceUpdate")
+                    b.Property<DateTime?>("LastPriceUpdate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -135,28 +143,34 @@ namespace UspeshnyiTrader.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<decimal?>("ClosePrice")
-                        .HasColumnType("numeric");
-
-                    b.Property<DateTime>("CloseTime")
+                    b.Property<DateTime?>("CloseTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Direction")
-                        .HasColumnType("integer");
+                    b.Property<DateTime?>("ClosedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("EntryPrice")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal?>("ExitPrice")
+                        .HasColumnType("numeric");
 
                     b.Property<int>("InstrumentId")
                         .HasColumnType("integer");
 
-                    b.Property<decimal>("OpenPrice")
-                        .HasColumnType("numeric");
-
                     b.Property<DateTime>("OpenTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<decimal?>("Payout")
+                    b.Property<decimal?>("Profit")
                         .HasColumnType("numeric");
 
                     b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Type")
                         .HasColumnType("integer");
 
                     b.Property<int>("UserId")
@@ -190,6 +204,9 @@ namespace UspeshnyiTrader.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("LastLogin")
                         .HasColumnType("timestamp with time zone");

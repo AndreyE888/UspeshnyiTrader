@@ -89,6 +89,11 @@ namespace UspeshnyiTrader.Data.Repositories
         {
             await _context.SaveChangesAsync();
         }
+        public async Task<int> GetCountAsync()
+        {
+            return await _context.Instruments.CountAsync();
+        }
+
         
     }
 }

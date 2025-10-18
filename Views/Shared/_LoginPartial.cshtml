@@ -1,0 +1,65 @@
+@using UspeshnyiTrader.Services
+@inject ISessionService SessionService
+
+@{
+    var userId = SessionService.GetCurrentUserId();
+    var userName = await SessionService.GetCurrentUsernameAsync();
+    var userBalance = await SessionService.GetCurrentUserBalanceAsync();
+}
+
+@if (userId != null)
+{
+    <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                👤 @userName
+                <span class="badge bg-success ms-1">$@userBalance.ToString("N2")</span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" href="@Url.Action("Profile", "Account")">
+                        👤 Мой профиль
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="@Url.Action("History", "Trading")">
+                        📋 История сделок
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a class="dropdown-item" href="@Url.Action("Index", "Admin")">
+                            ⚙️ Админ-панель
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                }
+                <li>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="dropdown-item text-danger">
+                            🚪 Выйти
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </li>
+    </ul>
+}
+else
+{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Login", "Account")">
+                🔑 Войти
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Register", "Account")">
+                📝 Регистрация
+            </a>
+        </li>
+    </ul>
+}

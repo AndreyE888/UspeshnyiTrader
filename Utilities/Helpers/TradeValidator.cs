@@ -43,12 +43,16 @@ namespace UspeshnyiTrader.Utilities.Helpers
                 result.Errors.AddRange(amountValidation.Errors);
             }
 
-            // Validate trade duration
-            var durationValidation = ValidateTradeDuration(trade.CloseTime - trade.OpenTime);
-            if (!durationValidation.IsValid)
+            // ✅ ИСПРАВЛЯЕМ: Проверяем длительность только если есть оба времени
+            if (trade.ClosedAt.HasValue)
             {
-                result.IsValid = false;
-                result.Errors.AddRange(durationValidation.Errors);
+                var duration = trade.ClosedAt.Value - trade.CreatedAt;
+                var durationValidation = ValidateTradeDuration(duration);
+                if (!durationValidation.IsValid)
+                {
+                    result.IsValid = false;
+                    result.Errors.AddRange(durationValidation.Errors);
+                }
             }
 
             // Validate instrument status
@@ -143,6 +147,15 @@ namespace UspeshnyiTrader.Utilities.Helpers
         }
 
         /// <summary>
+        /// ✅ НОВЫЙ МЕТОД: Validate trade duration with planned expiry
+        /// </summary>
+        public static ValidationResult ValidateTradeDuration(DateTime createdAt, DateTime expiryTime)
+        {
+            var duration = expiryTime - createdAt;
+            return ValidateTradeDuration(duration);
+        }
+
+        /// <summary>
         /// Validate risk management limits
         /// </summary>
         public static ValidationResult ValidateRiskLimits(decimal tradeAmount, decimal userBalance, int userId)
@@ -165,16 +178,6 @@ namespace UspeshnyiTrader.Utilities.Helpers
                 result.IsValid = false;
                 result.Errors.Add($"Trade amount exceeds daily risk limit of {MaxDailyRisk * 100}%");
             }
-
-            // Maximum number of concurrent trades
-            var maxConcurrentTrades = 10;
-            // This would need to query the database for user's active trades
-            // var activeTradesCount = await GetActiveTradesCount(userId);
-            // if (activeTradesCount >= maxConcurrentTrades)
-            // {
-            //     result.IsValid = false;
-            //     result.Errors.Add($"Maximum {maxConcurrentTrades} concurrent trades allowed");
-            // }
 
             return result;
         }
@@ -236,7 +239,11 @@ namespace UspeshnyiTrader.Utilities.Helpers
             }
 
             // Check if user account is in good standing
-            // This could include checks for suspended accounts, etc.
+            if (!user.IsActive)
+            {
+                result.IsValid = false;
+                result.Errors.Add("User account is not active");
+            }
 
             return result;
         }
@@ -281,15 +288,6 @@ namespace UspeshnyiTrader.Utilities.Helpers
         {
             var result = new ValidationResult { IsValid = true };
 
-            // Check volatility
-            // This would require historical price data
-            // var volatility = CalculateVolatility(instrument.RecentPrices);
-            // if (volatility > MaxAllowedVolatility)
-            // {
-            //     result.IsValid = false;
-            //     result.Errors.Add("Market volatility too high for trading");
-            // }
-
             // Check trading hours (if applicable)
             var now = DateTime.UtcNow;
             if (now.Hour >= 22 || now.Hour < 2) // Example: restrict trading during low liquidity hours
@@ -304,21 +302,37 @@ namespace UspeshnyiTrader.Utilities.Helpers
         /// <summary>
         /// Comprehensive pre-trade validation
         /// </summary>
-        public static async Task<ValidationResult> PreTradeValidation(int userId, int instrumentId, decimal amount, TimeSpan duration)
+        public static ValidationResult PreTradeValidation(User user, Instrument instrument, TradeType tradeType, decimal amount, int durationMinutes)
         {
             var result = new ValidationResult { IsValid = true };
 
-            // This would typically involve database calls to get user and instrument
-            // For now, we'll return a basic validation result
+            // Validate user
+            var userValidation = ValidateUser(user);
+            if (!userValidation.IsValid)
+            {
+                result.IsValid = false;
+                result.Errors.AddRange(userValidation.Errors);
+            }
 
-            var amountValidation = ValidateTradeAmount(amount, 1000m); // Default balance for demo
+            // Validate instrument
+            var instrumentValidation = ValidateInstrument(instrument);
+            if (!instrumentValidation.IsValid)
+            {
+                result.IsValid = false;
+                result.Errors.AddRange(instrumentValidation.Errors);
+            }
+
+            // Validate amount
+            var amountValidation = ValidateTradeAmount(amount, user?.Balance ?? 0);
             if (!amountValidation.IsValid)
             {
                 result.IsValid = false;
                 result.Errors.AddRange(amountValidation.Errors);
             }
 
-            var durationValidation = ValidateTradeDuration(duration);
+            // Validate duration
+            var plannedExpiry = DateTime.UtcNow.AddMinutes(durationMinutes);
+            var durationValidation = ValidateTradeDuration(DateTime.UtcNow, plannedExpiry);
             if (!durationValidation.IsValid)
             {
                 result.IsValid = false;

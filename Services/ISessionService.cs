@@ -6,4 +6,6 @@ public interface ISessionService
     int? GetCurrentUserId();
     bool IsUserAuthenticated();
     void Logout();
+    Task<string> GetCurrentUsernameAsync(); // Делаем асинхронным
+    Task<decimal> GetCurrentUserBalanceAsync(); // Делаем асинхронным
 }
