@@ -1,0 +1,41 @@
+# Build outputs
+bin/
+obj/
+
+# IDE files
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+
+# Runtime files
+appsettings.Development.json
+appsettings.Production.json
+
+# NuGet
+**/packages/
+*.nupkg
+.nuget/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Database
+Migrations/
+*.db
+*.db-journal
+
+# Secrets
+appsettings.Local.json
+*secret*
+*password*
+*connectionstring*
+
+# ASP.NET Core
+**/wwwroot/images/uploads/
