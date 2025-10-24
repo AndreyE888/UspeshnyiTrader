@@ -464,52 +464,52 @@
         </div>
     </section>
 
-    <!-- Instruments Section -->
-    <section class="instruments-section">
-        <h2 class="section-title">📊 Популярные инструменты</h2>
-        <div class="instruments-grid">
-            @if (ViewBag.Instruments != null && ViewBag.Instruments.Count > 0)
-            {
-                foreach (var instrument in ViewBag.Instruments)
-                {
-                    <div class="instrument-card" onclick="tradeInstrument('@instrument.Symbol')">
-                        <div class="instrument-symbol">@instrument.Symbol</div>
-                        <div class="instrument-price">$@instrument.CurrentPrice.ToString("N4")</div>
-                        <div class="price-change">+0.25%</div>
-                        <button class="btn-trade">Торговать</button>
-                    </div>
-                }
-            }
-            else
-            {
-                <!-- Демо-инструменты если БД не доступна -->
-                <div class="instrument-card" onclick="tradeInstrument('EURUSD')">
-                    <div class="instrument-symbol">EUR/USD</div>
-                    <div class="instrument-price">$1.0850</div>
-                    <div class="price-change">+0.15%</div>
-                    <button class="btn-trade">Торговать</button>
-                </div>
-                <div class="instrument-card" onclick="tradeInstrument('GBPUSD')">
-                    <div class="instrument-symbol">GBP/USD</div>
-                    <div class="instrument-price">$1.2650</div>
-                    <div class="price-change">+0.32%</div>
-                    <button class="btn-trade">Торговать</button>
-                </div>
-                <div class="instrument-card" onclick="tradeInstrument('USDJPY')">
-                    <div class="instrument-symbol">USD/JPY</div>
-                    <div class="instrument-price">¥148.50</div>
-                    <div class="price-change">-0.18%</div>
-                    <button class="btn-trade">Торговать</button>
-                </div>
-                <div class="instrument-card" onclick="tradeInstrument('XAUUSD')">
-                    <div class="instrument-symbol">XAU/USD</div>
-                    <div class="instrument-price">$2020.50</div>
-                    <div class="price-change">+0.45%</div>
-                    <button class="btn-trade">Торговать</button>
-                </div>
-            }
-        </div>
-    </section>
+    @* <!-- Instruments Section --> *@
+    @* <section class="instruments-section"> *@
+    @*     <h2 class="section-title">📊 Популярные инструменты</h2> *@
+    @*     <div class="instruments-grid"> *@
+    @*         @if (ViewBag.Instruments != null && ViewBag.Instruments.Count > 0) *@
+    @*         { *@
+    @*             foreach (var instrument in ViewBag.Instruments) *@
+    @*             { *@
+    @*                 <div class="instrument-card" onclick="tradeInstrument('@instrument.Symbol')"> *@
+    @*                     <div class="instrument-symbol">@instrument.Symbol</div> *@
+    @*                     <div class="instrument-price">$@instrument.CurrentPrice.ToString("N4")</div> *@
+    @*                     <div class="price-change">+0.25%</div> *@
+    @*                     <button class="btn-trade">Торговать</button> *@
+    @*                 </div> *@
+    @*             } *@
+    @*         } *@
+    @*         else *@
+    @*         { *@
+    @*             <!-- Демо-инструменты если БД не доступна --> *@
+    @*             <div class="instrument-card" onclick="tradeInstrument('EURUSD')"> *@
+    @*                 <div class="instrument-symbol">EUR/USD</div> *@
+    @*                 <div class="instrument-price">$1.0850</div> *@
+    @*                 <div class="price-change">+0.15%</div> *@
+    @*                 <button class="btn-trade">Торговать</button> *@
+    @*             </div> *@
+    @*             <div class="instrument-card" onclick="tradeInstrument('GBPUSD')"> *@
+    @*                 <div class="instrument-symbol">GBP/USD</div> *@
+    @*                 <div class="instrument-price">$1.2650</div> *@
+    @*                 <div class="price-change">+0.32%</div> *@
+    @*                 <button class="btn-trade">Торговать</button> *@
+    @*             </div> *@
+    @*             <div class="instrument-card" onclick="tradeInstrument('USDJPY')"> *@
+    @*                 <div class="instrument-symbol">USD/JPY</div> *@
+    @*                 <div class="instrument-price">¥148.50</div> *@
+    @*                 <div class="price-change">-0.18%</div> *@
+    @*                 <button class="btn-trade">Торговать</button> *@
+    @*             </div> *@
+    @*             <div class="instrument-card" onclick="tradeInstrument('XAUUSD')"> *@
+    @*                 <div class="instrument-symbol">XAU/USD</div> *@
+    @*                 <div class="instrument-price">$2020.50</div> *@
+    @*                 <div class="price-change">+0.45%</div> *@
+    @*                 <button class="btn-trade">Торговать</button> *@
+    @*             </div> *@
+    @*         } *@
+    @*     </div> *@
+    @* </section> *@
 
     <!-- Features -->
     <div class="features">
