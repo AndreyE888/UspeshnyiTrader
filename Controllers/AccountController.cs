@@ -129,7 +129,7 @@ namespace UspeshnyiTrader.Controllers
             Console.WriteLine("✅ User logged out successfully");
             return RedirectToAction("Login", "Account");
         }
-
+        
         [HttpGet]
        
         public async Task<IActionResult> Profile()

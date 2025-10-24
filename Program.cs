@@ -71,7 +71,7 @@ catch (Exception ex)
 }
 
 // РЕГИСТРАЦИЯ СЕРВИСОВ
-builder.Services.AddHostedService<PriceBackgroundService>();
+//builder.Services.AddHostedService<PriceBackgroundService>(); //обновление цен
 builder.Services.AddScoped<IInstrumentRepository, InstrumentRepository>();
 builder.Services.AddScoped<ITradeRepository, TradeRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
