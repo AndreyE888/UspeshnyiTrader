@@ -1,7 +1,9 @@
 # Build outputs
 bin/
 obj/
-
+*.dll
+*.exe
+*.pdb
 # IDE files
 .vs/
 .idea/
@@ -9,9 +11,7 @@ obj/
 *.suo
 *.userosscache
 
-# Runtime files
-appsettings.Development.json
-appsettings.Production.json
+
 
 # NuGet
 **/packages/
