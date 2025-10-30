@@ -518,7 +518,6 @@
                 <div class="instrument-card @(instrument.Symbol == ViewBag.SelectedSymbol ? "active" : "")" 
                      onclick="selectInstrument('@instrument.Symbol')">
                     <div class="instrument-symbol">@instrument.Symbol</div>
-                    <div class="instrument-price">$@instrument.CurrentPrice.ToString("N4")</div>
                 </div>
             }
         </div>
@@ -530,8 +529,7 @@
             <div class="chart-header">
                 <div class="instrument-info">
                     <h1>@ViewBag.SelectedSymbol</h1>
-                    <div class="current-price" id="currentPrice">$@ViewBag.CurrentPrice.ToString("N4")</div>
-                    <div class="price-change" id="priceChange">+0.25%</div>
+                  
                 </div>
                 <div class="time-frames">
                     <button class="amount-btn">1M</button>
