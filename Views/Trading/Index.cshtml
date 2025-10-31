@@ -502,7 +502,7 @@
                 <a href="/Trading" class="active">📈 Торговля</a>
                 <a href="/Instruments">💼 Инструменты</a>
                 <a href="/Admin">⚙️ Админка</a>
-                <a href="/Account">👤 @ViewBag.UserName</a>
+                <a href="https://localhost:5001/Account/Profile">👤 Профиль</a>
             </div>
         </nav>
     </div>
@@ -625,6 +625,8 @@
     </div>
 </div>
 
+
+
 <script>
     let currentPrice = @ViewBag.CurrentPrice.ToString().Replace(",", ".");
     let priceChange = 0.25;
@@ -633,19 +635,7 @@
     function selectInstrument(symbol) {
         window.location.href = `/Trading?symbol=${symbol}`;
     }
-
-    // Обновление цены в реальном времени
-    function updatePrice() {
-        const change = (Math.random() - 0.5) * 0.02; // ±1%
-        currentPrice = currentPrice * (1 + change);
-        priceChange = change * 100;
-
-        document.getElementById('currentPrice').textContent = '$' + currentPrice.toFixed(4);
-        const priceChangeElement = document.getElementById('priceChange');
-        priceChangeElement.textContent = (priceChange >= 0 ? '+' : '') + priceChange.toFixed(2) + '%';
-        priceChangeElement.style.background = priceChange >= 0 ? '#d5f4e6' : '#fadbd8';
-        priceChangeElement.style.color = priceChange >= 0 ? '#27ae60' : '#e74c3c';
-    }
+    
 
     // Установка суммы
     function setAmount(amount) {
@@ -653,17 +643,7 @@
         const maxAmount = @ViewBag.UserBalance;
         input.value = Math.min(amount, maxAmount);
     }
-    // Размещение сделки
    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
     // Показать модальное окно
     function showModal(type, title, message) {
@@ -708,16 +688,14 @@
             tradesList.removeChild(tradesList.lastChild);
         }
     }
-
-    // Обновляем цену каждые 3 секунды
-    setInterval(updatePrice, 3000);
-
+    
     // Закрытие модального окна по клику вне его
     document.getElementById('resultModal').addEventListener('click', function(e) {
         if (e.target === this) {
             closeModal();
         }
     });
+    
 </script>
 </body>
 </html>

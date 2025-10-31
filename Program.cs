@@ -181,6 +181,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthorization();
 app.UseSession();
 
 app.Use(async (context, next) =>

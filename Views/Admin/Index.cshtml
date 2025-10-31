@@ -362,15 +362,7 @@
         setInterval(updateServerTime, 1000);
 
         // Быстрые действия
-        function updateAllPrices() {
-            fetch('/Instruments/UpdatePrices', { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    alert('✅ Цены успешно обновлены');
-                    location.reload();
-                });
-        }
-
+       
         function backupDatabase() {
             alert('💾 Запущен процесс резервного копирования...');
             // В реальном проекте - AJAX запрос
