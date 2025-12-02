@@ -1,0 +1,513 @@
+@{
+    ViewData["Title"] = "Контакты";
+}
+
+@section Styles {
+    <style>
+        .contact-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+            border-radius: 0 0 30px 30px;
+        }
+
+        .contact-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .contact-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-info-item:hover {
+            background: #e9ecef;
+            transform: translateX(10px);
+        }
+
+        .contact-info-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+
+        .btn-send {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-send:hover {
+            background: linear-gradient(135deg, #229954, #27ae60);
+            transform: translateY(-2px);
+        }
+
+        .map-container {
+            height: 400px;
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .office-hours {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .hours-table {
+            width: 100%;
+        }
+
+        .hours-table tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hours-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .hours-table td {
+            padding: 0.8rem 0;
+        }
+
+        .support-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            color: white;
+        }
+
+        .social-link.telegram { background: #0088cc; }
+        .social-link.vk { background: #4c75a3; }
+        .social-link.whatsapp { background: #25d366; }
+        .social-link.email { background: #ea4335; }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            margin: 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #e9ecef;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-toggle {
+            transition: all 0.3s ease;
+        }
+
+        @@media (max-width: 768px) {
+            .contact-hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .contact-info-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .contact-info-icon {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+}
+
+<!-- Hero Section -->
+<section class="contact-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold">📞 Свяжитесь с нами</h1>
+                <p class="lead">Мы всегда рады помочь вам и ответить на все ваши вопросы</p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div style="font-size: 6rem;">💬</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <!-- Contact Information -->
+        <div class="col-lg-4 mb-4">
+            <div class="contact-card p-4 text-center h-100">
+                <div class="contact-icon">🏢</div>
+                <h4>Наш офис</h4>
+                <p class="text-muted">
+                    г. Москва, ул. Торговая, д. 123<br>
+                    Бизнес-центр "Финтех", офис 45<br>
+                    <small class="text-muted">Этаж 4</small>
+                </p>
+            </div>
+
+            <div class="contact-card p-4 text-center h-100 mt-4">
+                <div class="contact-icon">📞</div>
+                <h4>Телефоны</h4>
+                <div class="mb-3">
+                    <strong>Общие вопросы:</strong><br>
+                    <a href="tel:+79991234567" class="text-decoration-none">+7 (999) 123-45-67</a>
+                </div>
+                <div class="mb-3">
+                    <strong>Техническая поддержка:</strong><br>
+                    <a href="tel:+79991234568" class="text-decoration-none">+7 (999) 123-45-68</a>
+                </div>
+                <div>
+                    <strong>Отдел сотрудничества:</strong><br>
+                    <a href="tel:+79991234569" class="text-decoration-none">+7 (999) 123-45-69</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="col-lg-8">
+            <div class="contact-card p-4">
+                <h3 class="mb-4">📝 Форма обратной связи</h3>
+                <form id="contactForm" method="post" asp-action="SendMessage">
+                    @Html.AntiForgeryToken()
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Ваше имя *</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email *</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Телефон</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="+7 (999) 123-45-67">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">Тема сообщения *</label>
+                        <select class="form-control" id="subject" name="subject" required>
+                            <option value="">Выберите тему...</option>
+                            <option value="technical">Техническая поддержка</option>
+                            <option value="trading">Вопросы по торговле</option>
+                            <option value="account">Проблемы с аккаунтом</option>
+                            <option value="cooperation">Сотрудничество</option>
+                            <option value="other">Другое</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Сообщение *</label>
+                        <textarea class="form-control" id="message" name="message" rows="5"
+                                  placeholder="Опишите ваш вопрос или проблему..." required></textarea>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="agreement" required>
+                        <label class="form-check-label" for="agreement">
+                            Я соглашаюсь с обработкой персональных данных
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-send">
+                        📤 Отправить сообщение
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map Section -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="contact-card">
+                <div class="map-container">
+                    <div class="text-center">
+                        <div style="font-size: 4rem;">🗺️</div>
+                        <h3>Карта проезда</h3>
+                        <p>г. Москва, ул. Торговая, д. 123</p>
+                        <button class="btn btn-light mt-2" onclick="openMap()">
+                            📍 Открыть в Яндекс.Картах
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Information -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="office-hours">
+                <h4 class="mb-4">🕒 Время работы</h4>
+                <table class="hours-table">
+                    <tr>
+                        <td>Понедельник - Пятница</td>
+                        <td>9:00 - 18:00</td>
+                    </tr>
+                    <tr>
+                        <td>Суббота</td>
+                        <td>10:00 - 16:00</td>
+                    </tr>
+                    <tr>
+                        <td>Воскресенье</td>
+                        <td>Выходной</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="pt-3">
+                            <strong>Техническая поддержка:</strong>
+                            <span class="support-badge">24/7</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="contact-card p-4 h-100">
+                <h4 class="mb-4">📧 Другие способы связи</h4>
+
+                <div class="contact-info-item">
+                    <div class="contact-info-icon">📧</div>
+                    <div>
+                        <h6 class="mb-1">Электронная почта</h6>
+                        <p class="mb-0 text-muted">info@uspeshnyitrader.ru</p>
+                    </div>
+                </div>
+
+                <div class="contact-info-item">
+                    <div class="contact-info-icon">💬</div>
+                    <div>
+                        <h6 class="mb-1">Онлайн-чат</h6>
+                        <p class="mb-0 text-muted">Доступен в личном кабинете</p>
+                    </div>
+                </div>
+
+                <div class="contact-info-item">
+                    <div class="contact-info-icon">📱</div>
+                    <div>
+                        <h6 class="mb-1">Мобильное приложение</h6>
+                        <p class="mb-0 text-muted">Поддержка через приложение</p>
+                    </div>
+                </div>
+
+                <div class="social-links">
+                    <a href="#" class="social-link telegram" title="Telegram">📱</a>
+                    <a href="#" class="social-link vk" title="VK">👥</a>
+                    <a href="#" class="social-link whatsapp" title="WhatsApp">💚</a>
+                    <a href="#" class="social-link email" title="Email">📧</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="contact-card p-4">
+                <h3 class="mb-4">❓ Часто задаваемые вопросы</h3>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        Как начать торговать на платформе?
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Для начала торговли необходимо зарегистрироваться на платформе,
+                            пройти верификацию и пополнить торговый счет. После этого вы можете
+                            выбирать инструменты и начинать торговлю.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        Какие методы оплаты поддерживаются?
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Мы поддерживаем банковские карты (Visa, MasterCard),
+                            электронные кошельки (Qiwi, YooMoney), а также банковские переводы.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        Как быстро отвечает техническая поддержка?
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Наша техническая поддержка работает 24/7. Среднее время ответа
+                            в чате - 2-5 минут, по email - до 1 часа в рабочее время.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Открытие карты
+        function openMap() {
+            const address = encodeURIComponent('г. Москва, ул. Торговая, д. 123');
+            window.open(`https://yandex.ru/maps/?text=${address}`, '_blank');
+        }
+
+        // Переключение FAQ
+        function toggleFAQ(element) {
+            const faqItem = element.parentElement;
+            faqItem.classList.toggle('active');
+        }
+
+        // Обработка формы
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Здесь будет AJAX запрос к серверу
+            const formData = new FormData(this);
+
+            // Временная демонстрация успешной отправки
+            alert('Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.');
+            this.reset();
+        });
+
+        // Маска для телефона
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
+            e.target.value = !x[2] ? x[1] : '+7 (' + x[2] + ') ' + x[3] + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
+        });
+
+        // Анимация появления
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = document.querySelectorAll('.contact-card, .contact-info-item, .faq-item');
+            elements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.6s ease';
+
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+}

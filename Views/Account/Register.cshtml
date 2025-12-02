@@ -1,0 +1,153 @@
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Create New Account</h4>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @ViewBag.Error
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required
+                               placeholder="Choose a username" minlength="3" maxlength="50">
+                        <div class="form-text">3-50 characters, letters and numbers only</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" required
+                               placeholder="Enter your email">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required
+                               placeholder="Create a password" minlength="6">
+                        <div class="form-text">Minimum 6 characters</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required
+                               placeholder="Confirm your password">
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="agreeTerms" required>
+                        <label class="form-check-label" for="agreeTerms">
+                            I agree to the <a href="#" class="text-decoration-none">Terms and Conditions</a>
+                        </label>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">Create Account</button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-3">
+                    <p class="mb-0">Already have an account?
+                        <a href="@Url.Action("Login", "Account")" class="text-decoration-none">Login here</a>
+                    </p>
+                </div>
+
+                <div class="mt-4 p-3 bg-light rounded">
+                    <h6>Welcome Bonus!</h6>
+                    <small class="text-muted">
+                        All new accounts start with <strong>$1,000</strong> demo balance to practice trading.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Focus on username field
+            $('#username').focus();
+
+            // Password confirmation validation
+            $('#confirmPassword').on('keyup', function() {
+                const password = $('#password').val();
+                const confirmPassword = $(this).val();
+
+                if (password !== confirmPassword) {
+                    $(this).addClass('is-invalid');
+                    $(this).removeClass('is-valid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                    $(this).addClass('is-valid');
+                }
+            });
+
+            // Form validation
+            $('form').on('submit', function() {
+                const username = $('#username').val().trim();
+                const email = $('#email').val().trim();
+                const password = $('#password').val();
+                const confirmPassword = $('#confirmPassword').val();
+                const agreeTerms = $('#agreeTerms').is(':checked');
+
+                if (!username) {
+                    showAlert('Please enter a username', 'warning');
+                    return false;
+                }
+
+                if (username.length < 3) {
+                    showAlert('Username must be at least 3 characters', 'warning');
+                    return false;
+                }
+
+                if (!email) {
+                    showAlert('Please enter your email', 'warning');
+                    return false;
+                }
+
+                if (!isValidEmail(email)) {
+                    showAlert('Please enter a valid email address', 'warning');
+                    return false;
+                }
+
+                if (!password) {
+                    showAlert('Please enter a password', 'warning');
+                    return false;
+                }
+
+                if (password.length < 6) {
+                    showAlert('Password must be at least 6 characters', 'warning');
+                    return false;
+                }
+
+                if (password !== confirmPassword) {
+                    showAlert('Passwords do not match', 'warning');
+                    return false;
+                }
+
+                if (!agreeTerms) {
+                    showAlert('Please agree to the terms and conditions', 'warning');
+                    return false;
+                }
+
+                return true;
+            });
+
+            function isValidEmail(email) {
+                const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                return emailRegex.test(email);
+            }
+        });
+    </script>
+}

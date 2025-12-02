@@ -1,0 +1,474 @@
+@{
+    ViewData["Title"] = "Статистика и аналитика";
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <style>
+        .stats-hero {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .stat-trend {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .trend-up { color: #27ae60; }
+        .trend-down { color: #e74c3c; }
+
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            height: 400px;
+        }
+
+        .chart-placeholder {
+            height: 100%;
+            background: #f8f9fa;
+            border: 2px dashed #e9ecef;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        .period-selector {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .period-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .period-btn {
+            border: 2px solid #e9ecef;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .period-btn:hover, .period-btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .reports-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .report-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .report-item:hover {
+            background: #f8f9fa;
+        }
+
+        .report-item:last-child {
+            border-bottom: none;
+        }
+
+        .download-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        .user-activity {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .activity-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .top-users {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-rank {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .user-rank:last-child {
+            border-bottom: none;
+        }
+
+        .rank-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .rank-1 { background: #f39c12; }
+        .rank-2 { background: #95a5a6; }
+        .rank-3 { background: #e67e22; }
+
+        @@media (max-width: 768px) {
+            .stats-hero h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .period-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+}
+
+<!-- Hero Section -->
+<section class="stats-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold">📈 Статистика и аналитика</h1>
+                <p class="lead mb-0">Детальная аналитика работы торговой платформы</p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div style="font-size: 4rem;">📊</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Statistics Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number text-primary">@(ViewBag.Statistics?.TotalUsers ?? 0)</div>
+            <div class="stat-label">👥 Всего пользователей</div>
+            <div class="stat-trend trend-up">+12 за сегодня</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number text-success">@(ViewBag.Statistics?.TotalTrades ?? 0)</div>
+            <div class="stat-label">💼 Всего сделок</div>
+            <div class="stat-trend trend-up">+5.2% за неделю</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number text-warning">$@(ViewBag.Statistics?.TotalVolume?.ToString("N0") ?? "0")</div>
+            <div class="stat-label">💰 Общий объем</div>
+            <div class="stat-trend trend-up">+8.7% рост</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number text-info">$@(ViewBag.Statistics?.PlatformProfit?.ToString("N0") ?? "0")</div>
+            <div class="stat-label">💵 Доход платформы</div>
+            <div class="stat-trend trend-up">+15.3% за месяц</div>
+        </div>
+    </div>
+
+    <!-- Period Selector -->
+    <div class="period-selector">
+        <h5 class="mb-3">📅 Выберите период для анализа</h5>
+        <div class="period-buttons">
+            <button class="period-btn active" onclick="changePeriod('today')">Сегодня</button>
+            <button class="period-btn" onclick="changePeriod('week')">Неделя</button>
+            <button class="period-btn" onclick="changePeriod('month')">Месяц</button>
+            <button class="period-btn" onclick="changePeriod('quarter')">Квартал</button>
+            <button class="period-btn" onclick="changePeriod('year')">Год</button>
+            <button class="period-btn" onclick="changePeriod('all')">Все время</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-lg-8">
+            <!-- Trading Activity Chart -->
+            <div class="chart-container">
+                <h5 class="mb-3">📈 Активность торгов</h5>
+                <div class="chart-placeholder">
+                    <div>
+                        <div style="font-size: 4rem;">📊</div>
+                        <h5>График торговой активности</h5>
+                        <p class="text-muted">Здесь будет отображаться статистика сделок по времени</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Chart -->
+            <div class="chart-container">
+                <h5 class="mb-3">💰 Финансовая статистика</h5>
+                <div class="chart-placeholder">
+                    <div>
+                        <div style="font-size: 4rem;">💵</div>
+                        <h5>График доходов и расходов</h5>
+                        <p class="text-muted">Визуализация финансовых показателей платформы</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-lg-4">
+            <!-- User Activity -->
+            <div class="user-activity">
+                <h5 class="mb-3">👤 Активность пользователей</h5>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon">👤</div>
+                        <div>
+                            <strong>demofixed</strong>
+                            <div class="text-muted">Открыл сделку EUR/USD</div>
+                        </div>
+                        <small class="text-muted">2 мин назад</small>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">💰</div>
+                        <div>
+                            <strong>user123</strong>
+                            <div class="text-muted">Пополнил баланс на $100</div>
+                        </div>
+                        <small class="text-muted">5 мин назад</small>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">📈</div>
+                        <div>
+                            <strong>trader_pro</strong>
+                            <div class="text-muted">Закрыл сделку с прибылью $45</div>
+                        </div>
+                        <small class="text-muted">12 мин назад</small>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">👤</div>
+                        <div>
+                            <strong>new_user</strong>
+                            <div class="text-muted">Зарегистрировался на платформе</div>
+                        </div>
+                        <small class="text-muted">15 мин назад</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Users -->
+            <div class="top-users">
+                <h5 class="mb-3">🏆 Топ трейдеры</h5>
+                <div class="user-rank">
+                    <div class="rank-number rank-1">1</div>
+                    <div class="flex-grow-1">
+                        <strong>trader_pro</strong>
+                        <div class="text-muted">Прибыль: $1,245</div>
+                    </div>
+                    <span class="text-success">+12.5%</span>
+                </div>
+                <div class="user-rank">
+                    <div class="rank-number rank-2">2</div>
+                    <div class="flex-grow-1">
+                        <strong>golden_hand</strong>
+                        <div class="text-muted">Прибыль: $987</div>
+                    </div>
+                    <span class="text-success">+9.8%</span>
+                </div>
+                <div class="user-rank">
+                    <div class="rank-number rank-3">3</div>
+                    <div class="flex-grow-1">
+                        <strong>market_wizard</strong>
+                        <div class="text-muted">Прибыль: $756</div>
+                    </div>
+                    <span class="text-success">+7.2%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports Section -->
+    <div class="reports-section">
+        <h5 class="mb-4">📋 Отчеты и аналитика</h5>
+        <div class="report-item">
+            <div>
+                <strong>Ежедневный отчет по торговле</strong>
+                <div class="text-muted">Статистика сделок и финансовые показатели за день</div>
+            </div>
+            <button class="download-btn" onclick="downloadReport('daily')">📥 Скачать PDF</button>
+        </div>
+        <div class="report-item">
+            <div>
+                <strong>Недельный анализ пользователей</strong>
+                <div class="text-muted">Активность, регистрации и удержание пользователей</div>
+            </div>
+            <button class="download-btn" onclick="downloadReport('weekly')">📥 Скачать Excel</button>
+        </div>
+        <div class="report-item">
+            <div>
+                <strong>Месячный финансовый отчет</strong>
+                <div class="text-muted">Доходы, расходы и прибыль платформы</div>
+            </div>
+            <button class="download-btn" onclick="downloadReport('monthly')">📥 Скачать PDF</button>
+        </div>
+        <div class="report-item">
+            <div>
+                <strong>Анализ торговых инструментов</strong>
+                <div class="text-muted">Популярность и эффективность инструментов</div>
+            </div>
+            <button class="download-btn" onclick="downloadReport('instruments')">📥 Скачать CSV</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let currentPeriod = 'today';
+
+        // Смена периода
+        function changePeriod(period) {
+            currentPeriod = period;
+            const buttons = document.querySelectorAll('.period-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Загрузка данных для выбранного периода
+            loadChartData(period);
+        }
+
+        // Загрузка данных для графиков
+        function loadChartData(period) {
+            fetch(`/Admin/GetTradingData?period=${period}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Данные для графика:', data);
+                    // В реальном проекте здесь будет отрисовка графиков
+                    alert(`📊 Данные для периода "${period}" загружены`);
+                });
+        }
+
+        // Скачивание отчета
+        function downloadReport(type) {
+            alert(`📥 Начинается скачивание ${type} отчета...`);
+            // В реальном проекте - запрос на генерацию и скачивание отчета
+        }
+
+        // Авто-обновление статистики
+        function refreshStats() {
+            console.log('🔄 Обновление статистики...');
+            // В реальном проекте - AJAX запрос для обновления данных
+        }
+
+        // Обновляем статистику каждые 30 секунд
+        setInterval(refreshStats, 30000);
+
+        // Анимация появления
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.stat-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s ease';
+
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+}

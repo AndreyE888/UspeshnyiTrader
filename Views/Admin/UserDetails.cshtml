@@ -1,0 +1,434 @@
+@model UspeshnyiTrader.Models.Entities.User
+@using UspeshnyiTrader.Models.Entities
+@{
+    ViewData["Title"] = "Детали пользователя";
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <style>
+        .user-details-hero {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .user-profile-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .user-avatar-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0 auto 1.5rem;
+        }
+
+        .user-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 4px solid #3498db;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-value {
+            color: #6c757d;
+        }
+
+        .trades-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+        }
+
+        .trades-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .trades-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .trades-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .trade-success { color: #27ae60; }
+        .trade-failure { color: #e74c3c; }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-edit { background: #3498db; color: white; }
+        .btn-block { background: #e74c3c; color: white; }
+        .btn-unblock { background: #27ae60; color: white; }
+        .btn-back { background: #95a5a6; color: white; }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .status-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-active { background: #d5f4e6; color: #27ae60; }
+        .status-blocked { background: #fadbd8; color: #e74c3c; }
+
+        .balance-edit {
+            background: #e8f4fd;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        @@media (max-width: 768px) {
+            .user-details-hero h1 {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+}
+
+<!-- Hero Section -->
+<section class="user-details-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold">👤 Детали пользователя</h1>
+                <p class="lead mb-0">Подробная информация и управление пользователем</p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div style="font-size: 4rem;">📋</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <!-- User Profile Card -->
+    <div class="user-profile-card">
+        <div class="row">
+            <div class="col-lg-4 text-center">
+                <div class="user-avatar-large">
+                    @Model.Username.Substring(0, 1).ToUpper()
+                </div>
+                <h3>@Model.Username</h3>
+                <span class="@(Model.IsActive ? "status-active" : "status-blocked") status-badge">
+                    @(Model.IsActive ? "✅ Активен" : "❌ Заблокирован")
+                </span>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="user-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">@(ViewBag.UserTrades?.Count ?? 0)</div>
+                        <div class="stat-label">Всего сделок</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">$@Model.Balance.ToString("N2")</div>
+                        <div class="stat-label">Текущий баланс</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">
+                            @{
+                                // ФИКС: Используем явное приведение типа
+                                var userTrades = ViewBag.UserTrades as List<UspeshnyiTrader.Models.Entities.Trade>;
+                                var successfulTrades = userTrades?.Count(t => t.Status == TradeStatus.Completed && t.Profit > 0) ?? 0;
+                                var totalTrades = userTrades?.Count ?? 1;
+                                var successRate = totalTrades > 0 ? (successfulTrades * 100) / totalTrades : 0;
+                            }
+                            @successRate%
+                        </div>
+                        <div class="stat-label">Успешность</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">
+                            @{
+                                var totalVolume = userTrades?.Sum(t => t.Amount) ?? 0;
+                            }
+                            $@totalVolume.ToString("N0")
+                        </div>
+                        <div class="stat-label">Общий объем</div>
+                    </div>
+                </div>
+
+                <!-- User Information -->
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">📧 Email</div>
+                        <div class="info-value">@Model.Email</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">🆔 ID пользователя</div>
+                        <div class="info-value">@Model.Id</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">📅 Дата регистрации</div>
+                        <div class="info-value">@Model.CreatedAt.ToString("dd.MM.yyyy HH:mm")</div>
+                    </div>
+                    <!-- УБИРАЕМ РОЛЬ, так как её нет в модели -->
+                    <div class="info-item">
+                        <div class="info-label">📊 Статус аккаунта</div>
+                        <div class="info-value">@(Model.IsActive ? "Активен" : "Заблокирован")</div>
+                    </div>
+                </div>
+
+                <!-- Balance Edit -->
+                <div class="balance-edit">
+                    <h6>💰 Изменение баланса</h6>
+                    <form method="post" asp-action="UpdateUserBalance" class="row align-items-center">
+                        <input type="hidden" name="userId" value="@Model.Id">
+                        <div class="col-md-6">
+                            <input type="number" class="form-control" name="newBalance"
+                                   value="@Model.Balance" step="0.01" min="0" required>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-success w-100">
+                                💾 Обновить баланс
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="@Url.Action("Users", "Admin")" class="btn-action btn-back">
+                ← Назад к списку
+            </a>
+
+            @if (Model.IsActive)
+            {
+                <form method="post" asp-action="BlockUser" class="d-inline">
+                    <input type="hidden" name="userId" value="@Model.Id">
+                    <button type="submit" class="btn-action btn-block"
+                            onclick="return confirm('🚫 Вы уверены, что хотите заблокировать этого пользователя?')">
+                        🚫 Заблокировать
+                    </button>
+                </form>
+            }
+            else
+            {
+                <form method="post" asp-action="UnblockUser" class="d-inline">
+                    <input type="hidden" name="userId" value="@Model.Id">
+                    <button type="submit" class="btn-action btn-unblock"
+                            onclick="return confirm('✅ Вы уверены, что хотите разблокировать этого пользователя?')">
+                        ✅ Разблокировать
+                    </button>
+                </form>
+            }
+
+            <button class="btn-action btn-edit" onclick="showResetPassword()">
+                🔑 Сбросить пароль
+            </button>
+        </div>
+    </div>
+
+    <!-- Trading History -->
+    <div class="trades-section">
+        <h4 class="mb-4">📊 История сделок</h4>
+
+        @if (userTrades != null && userTrades.Count > 0)
+        {
+            <div class="table-responsive">
+                <table class="trades-table">
+                    <thead>
+                    <tr>
+                        <th>Инструмент</th>
+                        <th>Тип сделки</th>
+                        <th>Сумма</th>
+                        <th>Статус</th>
+                        <th>Прибыль</th>
+                        <th>Время открытия</th>
+                        <th>Время закрытия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var trade in userTrades)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@trade.Instrument?.Symbol</strong>
+                                <div class="small text-muted">@trade.Instrument?.Name</div>
+                            </td>
+                            <td>
+                                <span class="@(trade.Type == TradeType.Buy ? "text-success" : "text-danger")">
+                                    @(trade.Type == TradeType.Buy ? "📈 ПОКУПКА" : "📉 ПРОДАЖА")
+                                </span>
+                            </td>
+                            <td>$@trade.Amount.ToString("N2")</td>
+                            <td>
+                                @switch (trade.Status)
+                                {
+                                    case TradeStatus.Active:
+                                        <span class="badge bg-warning">⏳ Активна</span>
+                                        break;
+                                    case TradeStatus.Completed:
+                                        <span class="badge @(trade.Profit > 0 ? "bg-success" : "bg-danger")">
+                                            @(trade.Profit > 0 ? "✅ УСПЕХ" : "❌ ПРОИГРЫШ")
+                                        </span>
+                                        break;
+                                    case TradeStatus.Cancelled:
+                                        <span class="badge bg-secondary">❌ ОТМЕНЕНА</span>
+                                        break;
+                                    default:
+                                        <span class="badge bg-info">@trade.Status</span>
+                                        break;
+                                }
+                            </td>
+                            <td class="@(trade.Profit > 0 ? "trade-success" : "trade-failure")">
+                                @if (trade.Profit.HasValue)
+                                {
+                                    @(trade.Profit > 0 ? "+" : "")@($"${trade.Profit.Value.ToString("N2")}")
+                                }
+                                else
+                                {
+                                    <text>—</text>
+                                }
+                            </td>
+                            <td>@trade.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>@(trade.ClosedAt?.ToString("dd.MM.yyyy HH:mm") ?? "—")</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-4">
+                <div style="font-size: 4rem;">📭</div>
+                <h5>Нет данных о сделках</h5>
+                <p class="text-muted">Пользователь еще не совершал торговых операций</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showResetPassword() {
+            const newPassword = generatePassword();
+            if (confirm(`Сгенерировать новый пароль для пользователя?\n\nНовый пароль: ${newPassword}\n\nСкопируйте его для отправки пользователю.`)) {
+                // В реальном проекте здесь был бы AJAX запрос на сброс пароля
+                alert('✅ Пароль успешно сброшен. Не забудьте отправить его пользователю!');
+            }
+        }
+
+        function generatePassword() {
+            const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@@#$%^&*';
+            let password = '';
+            for (let i = 0; i < 12; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return password;
+        }
+
+        // Анимация появления
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = document.querySelectorAll('.stat-card, .info-item');
+            elements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.6s ease';
+
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+}

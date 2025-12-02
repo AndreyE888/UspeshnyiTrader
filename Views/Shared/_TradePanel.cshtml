@@ -1,0 +1,248 @@
+<!-- Trade Panel Widget -->
+<div class="card trade-panel-widget">
+    <div class="card-header bg-primary text-white py-2">
+        <h6 class="mb-0">
+            <i class="fas fa-bolt me-1"></i>Quick Trade
+        </h6>
+    </div>
+    <div class="card-body p-3">
+        <!-- Instrument Selection -->
+        <div class="mb-2">
+            <select class="form-select form-select-sm" id="quickInstrument">
+                <option value="">Select instrument...</option>
+                <!-- Instruments will be loaded dynamically -->
+            </select>
+        </div>
+
+        <!-- Current Price -->
+        <div class="mb-2">
+            <div class="d-flex justify-content-between align-items-center">
+                <small class="text-muted">Price:</small>
+                <strong id="quickPrice" class="text-success">$0.0000</strong>
+            </div>
+        </div>
+
+        <!-- Trade Direction -->
+        <div class="mb-2">
+            <div class="btn-group w-100" role="group">
+                <input type="radio" class="btn-check" name="quickDirection" id="quickUp" value="up" autocomplete="off" checked>
+                <label class="btn btn-sm btn-outline-success" for="quickUp">UP</label>
+
+                <input type="radio" class="btn-check" name="quickDirection" id="quickDown" value="down" autocomplete="off">
+                <label class="btn btn-sm btn-outline-danger" for="quickDown">DOWN</label>
+            </div>
+        </div>
+
+        <!-- Amount Selection -->
+        <div class="mb-2">
+            <label class="form-label small mb-1">Amount ($)</label>
+            <div class="btn-group w-100" role="group">
+                <button type="button" class="btn btn-sm btn-outline-secondary amount-btn" data-amount="5">$5</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary amount-btn" data-amount="10">$10</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary amount-btn" data-amount="25">$25</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary amount-btn" data-amount="50">$50</button>
+            </div>
+            <input type="number" class="form-control form-control-sm mt-1" id="quickAmount" min="1" max="1000" value="10">
+        </div>
+
+        <!-- Duration Selection -->
+        <div class="mb-3">
+            <label class="form-label small mb-1">Duration</label>
+            <select class="form-select form-select-sm" id="quickDuration">
+                <option value="1">1 Min</option>
+                <option value="5">5 Min</option>
+                <option value="15">15 Min</option>
+                <option value="60">1 Hour</option>
+            </select>
+        </div>
+
+        <!-- Trade Summary -->
+        <div class="bg-light rounded p-2 mb-3">
+            <div class="d-flex justify-content-between small">
+                <span>Potential Payout:</span>
+                <strong id="quickPayout" class="text-success">$18.00</strong>
+            </div>
+            <div class="d-flex justify-content-between small">
+                <span>Return:</span>
+                <strong class="text-success">80%</strong>
+            </div>
+        </div>
+
+        <!-- Trade Button -->
+        <button class="btn btn-primary btn-sm w-100" id="quickTradeBtn" disabled>
+            <i class="fas fa-play me-1"></i>PLACE TRADE
+        </button>
+
+        <!-- Quick Actions -->
+        <div class="mt-2 text-center">
+            <a href="@Url.Action("Index", "Trading")" class="small text-decoration-none">
+                <i class="fas fa-external-link-alt me-1"></i>Advanced Trading
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .trade-panel-widget {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .trade-panel-widget .card-body {
+        padding: 1rem;
+    }
+
+    .amount-btn.active {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+
+    .trade-panel-widget .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .trade-panel-widget .form-select-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .trade-panel-widget .form-control-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        initializeTradePanel();
+    });
+
+    function initializeTradePanel() {
+        loadQuickInstruments();
+        setupTradePanelEvents();
+        updateQuickPayout();
+    }
+
+    function loadQuickInstruments() {
+        $.get('/Instruments/GetAll', function(instruments) {
+            const select = $('#quickInstrument');
+            select.empty().append('<option value="">Select instrument...</option>');
+
+            instruments.forEach(instrument => {
+                select.append(`<option value="${instrument.id}" data-symbol="${instrument.symbol}">
+                    ${instrument.symbol}
+                </option>`);
+            });
+        });
+    }
+
+    function setupTradePanelEvents() {
+        // Instrument selection
+        $('#quickInstrument').change(function() {
+            const instrumentId = $(this).val();
+            if (instrumentId) {
+                startQuickPriceUpdates(instrumentId);
+                $('#quickTradeBtn').prop('disabled', false);
+            } else {
+                $('#quickTradeBtn').prop('disabled', true);
+                $('#quickPrice').text('$0.0000');
+            }
+        });
+
+        // Amount buttons
+        $('.amount-btn').click(function() {
+            $('.amount-btn').removeClass('active');
+            $(this).addClass('active');
+            const amount = $(this).data('amount');
+            $('#quickAmount').val(amount);
+            updateQuickPayout();
+        });
+
+        // Amount input
+        $('#quickAmount').on('input', function() {
+            $('.amount-btn').removeClass('active');
+            updateQuickPayout();
+        });
+
+        // Duration change
+        $('#quickDuration').change(updateQuickPayout);
+
+        // Place trade
+        $('#quickTradeBtn').click(placeQuickTrade);
+    }
+
+    function startQuickPriceUpdates(instrumentId) {
+        // Update price immediately
+        updateQuickPrice(instrumentId);
+
+        // Set up interval for updates
+        setInterval(() => {
+            updateQuickPrice(instrumentId);
+        }, 3000);
+    }
+
+    function updateQuickPrice(instrumentId) {
+        $.get(`/Instruments/GetPrice?instrumentId=${instrumentId}`, function(data) {
+            if (data.price !== undefined) {
+                $('#quickPrice').text(formatCurrency(data.price));
+            }
+        });
+    }
+
+    function updateQuickPayout() {
+        const amount = parseFloat($('#quickAmount').val()) || 0;
+        const payout = amount * 1.8; // 80% return
+        $('#quickPayout').text(formatCurrency(payout));
+    }
+
+    function placeQuickTrade() {
+        const instrumentId = $('#quickInstrument').val();
+        const direction = $('input[name="quickDirection"]:checked').val();
+        const amount = parseFloat($('#quickAmount').val());
+        const duration = parseInt($('#quickDuration').val());
+
+        if (!instrumentId) {
+            showAlert('Please select an instrument', 'warning');
+            return;
+        }
+
+        if (amount < 1 || amount > 1000) {
+            showAlert('Amount must be between $1 and $1000', 'warning');
+            return;
+        }
+
+        const tradeBtn = $('#quickTradeBtn');
+        setButtonLoading(tradeBtn, true);
+
+        $.post('/Trading/OpenTrade', {
+            instrumentId: instrumentId,
+            direction: direction,
+            amount: amount,
+            duration: duration
+        }, function(response) {
+            if (response.success) {
+                showAlert(`Quick trade placed! ID: ${response.tradeId}`, 'success');
+                // Reset form
+                $('#quickInstrument').val('');
+                $('#quickAmount').val('10');
+                $('.amount-btn').removeClass('active');
+                updateQuickPayout();
+                $('#quickTradeBtn').prop('disabled', true);
+
+                // Update balance in navigation
+                updateUserBalance();
+            } else {
+                showAlert(response.message, 'danger');
+            }
+        }).fail(function() {
+            showAlert('Failed to place trade', 'danger');
+        }).always(function() {
+            setButtonLoading(tradeBtn, false);
+        });
+    }
+
+    // Make function available globally for use in other views
+    window.initializeTradePanel = initializeTradePanel;
+</script>

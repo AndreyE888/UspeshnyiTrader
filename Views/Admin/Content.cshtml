@@ -1,0 +1,517 @@
+@model IEnumerable<UspeshnyiTrader.Models.Entities.Instrument>
+@{
+    ViewData["Title"] = "Управление контентом";
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <style>
+        .content-hero {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .content-tabs {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: #6c757d;
+            font-weight: 500;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin-right: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .nav-tabs .nav-link:hover {
+            background: #f8f9fa;
+        }
+
+        .tab-content {
+            padding: 2rem 0 0 0;
+        }
+
+        .instrument-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .instrument-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .price-input {
+            max-width: 150px;
+        }
+
+        .btn-update {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-update:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .add-instrument-form {
+            background: #e8f4fd;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .news-editor {
+            background: white;
+            border: 2px dashed #e9ecef;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active { background: #d5f4e6; color: #27ae60; }
+        .status-inactive { background: #fadbd8; color: #e74c3c; }
+
+        .content-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+            text-align: center;
+            flex: 1;
+        }
+
+        .action-btn:hover {
+            border-color: #3498db;
+            transform: translateY(-3px);
+            color: #2c3e50;
+            text-decoration: none;
+        }
+
+        .action-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .price-history {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .import-export {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        @@media (max-width: 768px) {
+            .content-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .content-actions {
+                flex-direction: column;
+            }
+            
+            .nav-tabs .nav-link {
+                padding: 0.8rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+}
+
+<!-- Hero Section -->
+<section class="content-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold">📊 Управление контентом</h1>
+                <p class="lead mb-0">Управление торговыми инструментами и контентом платформы</p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div style="font-size: 4rem;">🛠️</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Quick Actions -->
+    <div class="content-actions">
+        <a href="#" class="action-btn" onclick="updateAllPrices()">
+            <span class="action-icon">📈</span>
+            <div>Обновить все цены</div>
+        </a>
+        <a href="#" class="action-btn">
+            <span class="action-icon">📥</span>
+            <div>Импорт данных</div>
+        </a>
+        <a href="#" class="action-btn">
+            <span class="action-icon">📤</span>
+            <div>Экспорт данных</div>
+        </a>
+        <a href="#" class="action-btn">
+            <span class="action-icon">🔄</span>
+            <div>Синхронизация</div>
+        </a>
+    </div>
+
+    <!-- Tabs -->
+    <div class="content-tabs">
+        <ul class="nav nav-tabs" id="contentTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="instruments-tab" data-bs-toggle="tab" 
+                        data-bs-target="#instruments" type="button" role="tab">
+                    📊 Торговые инструменты
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="news-tab" data-bs-toggle="tab" 
+                        data-bs-target="#news" type="button" role="tab">
+                    📰 Новости и статьи
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="settings-tab" data-bs-toggle="tab" 
+                        data-bs-target="#settings" type="button" role="tab">
+                    ⚙️ Настройки контента
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="contentTabsContent">
+            <!-- Instruments Tab -->
+            <div class="tab-pane fade show active" id="instruments" role="tabpanel">
+                <!-- Add Instrument Form -->
+                <div class="add-instrument-form">
+                    <h5>➕ Добавить новый инструмент</h5>
+                    <form id="addInstrumentForm" method="post" asp-action="AddInstrument">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" name="symbol" placeholder="Символ (EUR/USD)" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" name="name" placeholder="Название инструмента" required>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" class="form-control" name="price" step="0.0001" placeholder="Начальная цена" required>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">Добавить</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Instruments List -->
+                <h5 class="mb-3">📋 Список инструментов</h5>
+                @foreach (var instrument in Model)
+                {
+                    <div class="instrument-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <strong>@instrument.Symbol</strong>
+                                <div class="small text-muted">@instrument.Name</div>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="@(instrument.IsActive ? "status-active" : "status-inactive") status-badge">
+                                    @(instrument.IsActive ? "Активен" : "Неактивен")
+                                </span>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="fw-bold text-success">$@instrument.CurrentPrice.ToString("N4")</div>
+                                <div class="small text-muted">
+                                    Обновлено: @instrument.LastPriceUpdate?.ToString("HH:mm")
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="number" class="form-control price-input" 
+                                           id="price-@instrument.Id" value="@instrument.CurrentPrice" step="0.0001">
+                                    <button class="btn-update" onclick="updatePrice(@instrument.Id)">
+                                        Обновить
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="btn-group">
+                                    <button class="btn-update" onclick="toggleInstrument(@instrument.Id, @(!instrument.IsActive).ToString().ToLower())">
+                                        @(instrument.IsActive ? "Деактивировать" : "Активировать")
+                                    </button>
+                                    <button class="btn-delete" onclick="deleteInstrument(@instrument.Id)">
+                                        Удалить
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Price History -->
+                        <div class="price-history">
+                            <div class="history-item">
+                                <span>14:30</span>
+                                <span class="text-success">$1.0850</span>
+                                <span>+0.0015</span>
+                            </div>
+                            <div class="history-item">
+                                <span>14:15</span>
+                                <span>$1.0838</span>
+                                <span class="text-success">+0.0003</span>
+                            </div>
+                            <div class="history-item">
+                                <span>14:00</span>
+                                <span>$1.0835</span>
+                                <span class="text-muted">0.0000</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- News Tab -->
+            <div class="tab-pane fade" id="news" role="tabpanel">
+                <div class="news-editor">
+                    <h5>📰 Управление новостями и статьями</h5>
+                    <p class="text-muted mb-3">Создавайте и редактируйте новости для публикации на платформе</p>
+                    <button class="btn btn-primary" onclick="createNews()">
+                        ✏️ Создать новую статью
+                    </button>
+                </div>
+
+                <!-- News List -->
+                <div class="instrument-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h6>🎉 Запуск новой торговой платформы</h6>
+                            <p class="text-muted mb-0">Опубликовано: 15.12.2024 | Просмотров: 1,245</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button class="btn-update">✏️ Редактировать</button>
+                            <button class="btn-delete">🗑️ Удалить</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="instrument-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h6>📈 Обзор рынка: Доллар укрепляется</h6>
+                            <p class="text-muted mb-0">Опубликовано: 18.12.2024 | Просмотров: 892</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button class="btn-update">✏️ Редактировать</button>
+                            <button class="btn-delete">🗑️ Удалить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div class="tab-pane fade" id="settings" role="tabpanel">
+                <h5>⚙️ Настройки контента</h5>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="instrument-card">
+                            <h6>🔄 Авто-обновление цен</h6>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="autoUpdate" checked>
+                                <label class="form-check-label" for="autoUpdate">Включить авто-обновление</label>
+                            </div>
+                            <div class="mt-2">
+                                <label class="form-label">Интервал обновления (секунды)</label>
+                                <input type="number" class="form-control" value="30" min="5">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="instrument-card">
+                            <h6>📊 Источники данных</h6>
+                            <select class="form-select">
+                                <option>Forex API</option>
+                                <option>Cryptocurrency API</option>
+                                <option>Custom Data Feed</option>
+                            </select>
+                            <div class="mt-2">
+                                <label class="form-label">API Key</label>
+                                <input type="password" class="form-control" placeholder="Введите API ключ">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Import/Export -->
+                <div class="import-export">
+                    <h6>📥 Импорт / 📤 Экспорт данных</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Импорт инструментов</label>
+                                <input type="file" class="form-control" accept=".csv,.json,.xlsx">
+                            </div>
+                            <button class="btn-update">📥 Импортировать</button>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Экспорт данных</label>
+                                <select class="form-select">
+                                    <option>CSV формат</option>
+                                    <option>JSON формат</option>
+                                    <option>Excel формат</option>
+                                </select>
+                            </div>
+                            <button class="btn-update">📤 Экспортировать</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Обновление цены инструмента
+        function updatePrice(instrumentId) {
+            const newPrice = document.getElementById(`price-${instrumentId}`).value;
+            
+            fetch('/Admin/UpdateInstrumentPrice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `instrumentId=${instrumentId}&newPrice=${newPrice}`
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('✅ Цена успешно обновлена');
+                    location.reload();
+                } else {
+                    alert('❌ Ошибка при обновлении цены');
+                }
+            });
+        }
+
+        // Переключение статуса инструмента
+        function toggleInstrument(instrumentId, activate) {
+            const action = activate ? 'активировать' : 'деактивировать';
+            if (confirm(`Вы уверены, что хотите ${action} этот инструмент?`)) {
+                // В реальном проекте - AJAX запрос
+                alert(`✅ Инструмент ${action === 'активировать' ? 'активирован' : 'деактивирован'}`);
+                location.reload();
+            }
+        }
+
+        // Удаление инструмента
+        function deleteInstrument(instrumentId) {
+            if (confirm('🗑️ Вы уверены, что хотите удалить этот инструмент?')) {
+                // В реальном проекте - AJAX запрос
+                alert('✅ Инструмент удален');
+                location.reload();
+            }
+        }
+
+        // Создание новости
+        function createNews() {
+            alert('📝 Редактор новостей будет открыт в новой вкладке');
+            // В реальном проекте - открытие редактора
+        }
+
+        // Обновление всех цен
+        function updateAllPrices() {
+            if (confirm('🔄 Обновить цены всех инструментов?')) {
+                fetch('/Instruments/UpdatePrices', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert('✅ Все цены успешно обновлены');
+                        location.reload();
+                    });
+            }
+        }
+
+        // Анимация появления
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.instrument-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s ease';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+}
