@@ -26,7 +26,8 @@ namespace UspeshnyiTrader.Models.Entities
 
         // Navigation properties
         public List<Trade> Trades { get; set; } = new();
-        public UserBalance BalanceHistory { get; set; } = null!;
+        // public UserBalance BalanceHistory { get; set; } = null!;
+        public ICollection<UserBalance> BalanceHistories { get; set; } = new List<UserBalance>();
         public bool IsActive { get; set; } = true; 
         
     }

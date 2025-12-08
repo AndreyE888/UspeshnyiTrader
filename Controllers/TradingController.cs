@@ -3,6 +3,7 @@ using UspeshnyiTrader.Data.Repositories;
 using UspeshnyiTrader.Services;
 using UspeshnyiTrader.Models.Entities;
 using UspeshnyiTrader.Models.Enums;
+using UspeshnyiTrader.Data;
 
 namespace UspeshnyiTrader.Controllers
 {
@@ -13,19 +14,23 @@ namespace UspeshnyiTrader.Controllers
         private readonly ITradeRepository _tradeRepository;
         private readonly ISessionService _sessionService;
         private readonly ITradingService _tradingService;
+        private readonly AppDbContext _context; // ДОБАВЬ ЭТУ СТРОЧКУ
+
 
         public TradingController(
             IUserRepository userRepository,
             IInstrumentRepository instrumentRepository,
             ITradeRepository tradeRepository,
             ISessionService sessionService,
-            ITradingService tradingService)
+            ITradingService tradingService,
+            AppDbContext context)
         {
             _userRepository = userRepository;
             _instrumentRepository = instrumentRepository;
             _tradeRepository = tradeRepository;
             _sessionService = sessionService;
             _tradingService = tradingService;
+            _context = context;
         }
 
         // ОБЪЕДИНЕННЫЙ МЕТОД: и график, и торговля на одной странице
@@ -130,57 +135,8 @@ namespace UspeshnyiTrader.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CloseTrade(int tradeId, decimal closePrice)
-        {
-            var userId = _sessionService.GetCurrentUserId();
-            if (userId == null)
-                return Json(new { success = false, message = "Требуется авторизация" });
 
-            var trade = await _tradeRepository.GetByIdAsync(tradeId);
-            if (trade == null || trade.UserId != userId.Value)
-                return Json(new { success = false, message = "Сделка не найдена" });
 
-            var user = await _userRepository.GetByIdAsync(userId.Value);
-            if (user == null)
-                return Json(new { success = false, message = "Пользователь не найден" });
-
-            try
-            {
-                decimal result = 0;
-                bool isWin = false;
-
-                if ((trade.Type == TradeType.Buy && closePrice > trade.EntryPrice) ||
-                    (trade.Type == TradeType.Sell && closePrice < trade.EntryPrice))
-                {
-                    result = trade.Amount * 0.8m;
-                    isWin = true;
-                }
-
-                user.Balance += result;
-                await _userRepository.UpdateAsync(user);
-
-                trade.ExitPrice = closePrice;
-                trade.ClosedAt = DateTime.UtcNow;
-                trade.Status = TradeStatus.Completed;
-                trade.Profit = result;
-
-                await _tradeRepository.UpdateAsync(trade);
-
-                return Json(new
-                {
-                    success = true,
-                    message = isWin ? "Сделка закрыта с прибылью!" : "Сделка закрыта",
-                    isWin = isWin,
-                    payout = result,
-                    newBalance = user.Balance
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = $"Ошибка: {ex.Message}" });
-            }
-        }
 
         [HttpGet]
         public async Task<IActionResult> GetCurrentPrices()
@@ -284,7 +240,7 @@ namespace UspeshnyiTrader.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTradeResult(int tradeId)
+        public async Task<IActionResult> GetTradeResult(int tradeId)  // ← параметр из query string
         {
             var userId = _sessionService.GetCurrentUserId();
             if (userId == null)
@@ -300,13 +256,19 @@ namespace UspeshnyiTrader.Controllers
             return Json(new
             {
                 success = true,
+                status = trade.Status.ToString(), // ← ДОБАВЬ ЭТО!
+                isCompleted = trade.Status == TradeStatus.Completed,
+                isActive = trade.Status == TradeStatus.Active,
                 isWin = trade.Profit > 0,
                 profit = trade.Profit,
                 payout = trade.Profit > 0 ? trade.Amount + trade.Profit : 0,
                 exitPrice = trade.ExitPrice,
-                entryPrice = trade.EntryPrice
+                entryPrice = trade.EntryPrice,
+                amount = trade.Amount,
+                closedAt = trade.ClosedAt?.ToString("HH:mm:ss")
             });
         }
+
 
         // Модель для запроса на размещение ордера
         public class PlaceOrderRequest
@@ -317,7 +279,6 @@ namespace UspeshnyiTrader.Controllers
             public decimal Price { get; set; }
             public int DurationMinutes { get; set; } = 1;
         }
-
 
     }
 }

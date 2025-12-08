@@ -20,6 +20,8 @@ namespace UspeshnyiTrader.Data.Repositories
                 .Include(i => i.Trades)
                 .FirstOrDefaultAsync(i => i.Id == id);
         }
+        
+     
 
         public async Task<Instrument?> GetBySymbolAsync(string symbol)
         {

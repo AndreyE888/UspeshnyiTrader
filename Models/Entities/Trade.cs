@@ -66,6 +66,8 @@ namespace UspeshnyiTrader.Models.Entities
             Duration = TimeSpan.FromMinutes(durationMinutes);
             ExpirationTime = OpenTime.Add(Duration);
             Investment = Amount;
+            Console.WriteLine($"SetExpiration: {durationMinutes} min = {Duration.TotalSeconds} sec");
+            Console.WriteLine($"Open: {OpenTime}, Expire: {ExpirationTime}");
         }
     }
 }

@@ -37,7 +37,7 @@ namespace UspeshnyiTrader.Services
                 }
 
                 // Ждем 5 секунд перед следующим обновлением
-                await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
             }
         }
 

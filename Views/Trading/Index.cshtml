@@ -521,6 +521,7 @@
                     <div class="duration-selector">
                         <label>Время экспирации:</label>
                         <select id="durationSelect">
+                            <option value="0.083">5 секунд</option> <!-- 5/60 = 0.083 минуты -->
                             <option value="1">1 минута</option>
                             <option value="2">2 минуты</option>
                             <option value="5">5 минут</option>
@@ -582,6 +583,84 @@
 </div>
 
 <script>
+
+   
+
+    // Обновление таймера для активных сделок
+    function updateTimerIfExists(tradeId, tradeData) {
+        const timerElement = document.querySelector(`[data-trade-id="${tradeId}"] .trade-timer`);
+        if (timerElement && tradeData.timeRemaining > 0) {
+            const minutes = Math.floor(tradeData.timeRemaining / 60);
+            const seconds = Math.floor(tradeData.timeRemaining % 60);
+            timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+    }
+
+    // Обновление отображения завершенной сделки
+    function updateTradeDisplay(tradeId, tradeData) {
+        const tradeElement = document.querySelector(`[data-trade-id="${tradeId}"]`);
+
+        if (!tradeElement) return;
+
+        // Обновляем статус
+        const statusElement = tradeElement.querySelector('.trade-status');
+        if (statusElement) {
+            if (tradeData.isWin) {
+                statusElement.textContent = 'Выигрыш 🎉';
+                statusElement.className = 'trade-status text-success fw-bold';
+                // Добавляем анимацию
+                statusElement.classList.add('animate__animated', 'animate__pulse');
+            } else {
+                statusElement.textContent = 'Проигрыш 💔';
+                statusElement.className = 'trade-status text-danger';
+            }
+        }
+
+        // Обновляем прибыль
+        const profitElement = tradeElement.querySelector('.trade-profit');
+        if (profitElement) {
+            if (tradeData.isWin) {
+                profitElement.textContent = `+$${tradeData.profit?.toFixed(2) || '0.00'}`;
+                profitElement.className = 'trade-profit text-success fw-bold';
+            } else {
+                profitElement.textContent = `-$${Math.abs(tradeData.profit || 0).toFixed(2)}`;
+                profitElement.className = 'trade-profit text-danger';
+            }
+        }
+
+        // Обновляем payout если есть элемент
+        const payoutElement = tradeElement.querySelector('.trade-payout');
+        if (payoutElement && tradeData.payout > 0) {
+            payoutElement.textContent = `Выплата: $${tradeData.payout.toFixed(2)}`;
+        }
+
+        // Убираем таймер если был
+        const timerElement = tradeElement.querySelector('.trade-timer');
+        if (timerElement) {
+            timerElement.remove();
+        }
+
+        // Показываем время закрытия
+        const timeElement = tradeElement.querySelector('.trade-time');
+        if (timeElement && tradeData.closedAt) {
+            timeElement.textContent = `Закрыто: ${tradeData.closedAt}`;
+        }
+
+        // Обновляем иконку
+        const iconElement = tradeElement.querySelector('.trade-icon');
+        if (iconElement) {
+            iconElement.className = tradeData.isWin ?
+                'trade-icon fas fa-trophy text-warning' :
+                'trade-icon fas fa-times-circle';
+        }
+
+        // Запускаем обновление баланса
+        setTimeout(updateUserBalance, 1000);
+    }
+
+ 
+    
+    
     let currentPrice = @ViewBag.CurrentPrice.ToString().Replace(",", ".");
     let priceChange = 0.25;
     let priceChart;
@@ -787,29 +866,126 @@
         document.getElementById('resultModal').style.display = 'none';
     }
 
-    // Добавить сделку в список
-    function addTradeToList(symbol, direction, amount) {
+
+    // Добавить сделку в список - ОБНОВЛЕННАЯ ВЕРСИЯ
+    function addTradeToList(symbol, direction, amount, tradeId) {
         const tradesList = document.getElementById('tradesList');
-        const isWin = Math.random() > 0.4;
-        const payout = isWin ? amount * 0.8 : 0;
+        const durationValue = parseFloat(document.getElementById('durationSelect').value);
+        const durationSeconds = Math.round(durationValue * 60);
 
         const tradeItem = document.createElement('div');
         tradeItem.className = 'trade-item';
+        tradeItem.id = `trade-${tradeId}`;
+        tradeItem.dataset.tradeId = tradeId; // ← ВАЖНО: добавляем data-trade-id
+
+        const displayTime = durationSeconds < 60 ?
+            `${durationSeconds} сек` :
+            `${durationValue} мин`;
+
         tradeItem.innerHTML = `
-            <span>${symbol}</span>
-            <span class="trade-direction ${direction === 'up' ? 'direction-call' : 'direction-put'}">
-                ${direction === 'up' ? 'ВВЕРХ' : 'ВНИЗ'}
-            </span>
-            <span>$${amount}</span>
-            <span style="color: ${isWin ? '#27ae60' : '#e74c3c'};">${isWin ? '+$' + payout : '-$' + amount}</span>
-        `;
+        <span>${symbol}</span>
+        <span class="trade-direction ${direction === 'up' ? 'direction-call' : 'direction-put'}">
+            ${direction === 'up' ? 'ВВЕРХ' : 'ВНИЗ'}
+        </span>
+        <span>$${amount}</span>
+        <span id="result-${tradeId}" style="color: #3498db;">
+            ⏳ ${displayTime}
+        </span>
+    `;
 
         tradesList.insertBefore(tradeItem, tradesList.firstChild);
 
         if (tradesList.children.length > 10) {
             tradesList.removeChild(tradesList.lastChild);
         }
+
+        // Таймер обратного отсчета
+        let timeLeft = durationSeconds;
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            const resultSpan = document.getElementById(`result-${tradeId}`);
+
+            if (!resultSpan) {
+                clearInterval(timerInterval);
+                return;
+            }
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                resultSpan.textContent = '📊 Расчет...';
+                resultSpan.style.color = '#f39c12';
+            } else {
+                if (durationSeconds < 60) {
+                    resultSpan.textContent = `⏳ ${timeLeft} сек`;
+                } else {
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    resultSpan.textContent = `⏳ ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }
+        }, 1000);
     }
+
+    async function checkTradeResult(tradeId, symbol, direction, amount) {
+        try {
+            const response = await fetch(`/Trading/GetTradeResult?id=${tradeId}`);
+            const result = await response.json();
+
+            const resultSpan = document.getElementById(`result-${tradeId}`);
+            if (!resultSpan) return;
+
+            if (result.success && result.status === 'Completed') {
+                if (result.isWin) {
+                    resultSpan.textContent = `✅ +$${result.payout}`;
+                    resultSpan.style.color = '#27ae60';
+                    showNotification(`Выигрыш! +$${result.profit}`, 'success');
+                } else {
+                    resultSpan.textContent = `❌ -$${amount}`;
+                    resultSpan.style.color = '#e74c3c';
+                    showNotification(`Проигрыш -$${amount}`, 'error');
+                }
+
+                // Обновляем баланс
+                updateBalance(result.newBalance);
+            } else if (result.status === 'Active') {
+                // Если сделка еще не закрылась на сервере
+                resultSpan.textContent = '⏳ Ожидание сервера...';
+                setTimeout(() => checkTradeResult(tradeId, symbol, direction, amount), 3000);
+            }
+        } catch (error) {
+            console.error('Ошибка проверки:', error);
+            const resultSpan = document.getElementById(`result-${tradeId}`);
+            if (resultSpan) {
+                resultSpan.textContent = '❌ Ошибка';
+                resultSpan.style.color = '#e74c3c';
+            }
+        }
+    }
+
+    // Вспомогательные функции
+    function showNotification(message, type) {
+        const modal = document.getElementById('resultModal');
+        const icon = modal.querySelector('.modal-icon');
+        const title = document.getElementById('modalTitle');
+        const text = document.getElementById('modalMessage');
+
+        icon.className = `modal-icon ${type}`;
+        icon.textContent = type === 'success' ? '✅' : '❌';
+        title.textContent = type === 'success' ? 'Сделка завершена!' : 'Сделка завершена';
+        text.textContent = message;
+        modal.style.display = 'flex';
+    }
+
+    function updateBalance(newBalance) {
+        const balanceElement = document.querySelector('.balance-amount');
+        if (balanceElement) {
+            balanceElement.textContent = `$${newBalance.toFixed(2)}`;
+        }
+    }
+
+
+
+
 
     async function placeTrade(direction) {
         console.log("Размещение сделки:", direction);
@@ -845,8 +1021,11 @@
             const result = await response.json();
 
             if (result.success) {
-                showModal('success', 'Успех!', result.message);
-                addTradeToList('@ViewBag.SelectedSymbol', direction, amount);
+                showModal('success', 'Сделка открыта!',
+                    `Сделка #${result.tradeId} открыта. Результат через ${durationMinutes} мин.`);
+
+                // Добавляем как ОЖИДАЮЩУЮ (а не сразу с результатом!)
+                addTradeToList('@ViewBag.SelectedSymbol', direction, amount, result.tradeId);
             } else {
                 showModal('error', 'Ошибка', result.message);
             }
@@ -870,6 +1049,94 @@
             closeModal();
         }
     });
+
+    
+
+    // Функция обновления баланса
+    function updateUserBalance() {
+        console.log('💰 Обновление баланса...');
+        fetch('/Trading/GetCurrentBalance')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const balanceElement = document.querySelector('.balance-amount');
+                    if (balanceElement) {
+                        balanceElement.textContent = `$${parseFloat(data.balance).toFixed(2)}`;
+                        console.log('✅ Баланс обновлен:', data.balance);
+                    }
+                }
+            })
+            .catch(error => console.error('❌ Ошибка обновления баланса:', error));
+    }
+    // Упрощенная проверка сделок
+    function checkTradeResults() {
+        console.log('🔍 Проверка сделок...');
+
+        const tradeElements = document.querySelectorAll('.trade-item');
+        console.log(`Найдено сделок: ${tradeElements.length}`);
+
+        tradeElements.forEach(tradeElement => {
+            const tradeId = tradeElement.dataset.tradeId;
+            const resultSpan = tradeElement.querySelector(`#result-${tradeId}`);
+
+            // Проверяем только сделки с "Расчет..."
+            if (resultSpan && resultSpan.textContent.includes('Расчет')) {
+                console.log(`🔄 Проверяю сделку #${tradeId}`);
+
+                fetch(`/Trading/GetTradeResult?tradeId=${tradeId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(`📊 Ответ для #${tradeId}:`, data);
+
+                        if (data.success && data.status === "Completed") {
+                            console.log(`🎉 Сделка #${tradeId} завершена!`);
+
+                            // Обновляем отображение
+                            if (data.isWin) {
+                                resultSpan.textContent = `✅ +$${data.payout}`;
+                                resultSpan.style.color = '#27ae60';
+                            } else {
+                                resultSpan.textContent = `❌ -$${data.amount}`;
+                                resultSpan.style.color = '#e74c3c';
+                            }
+
+                            // Обновляем баланс
+                            updateUserBalance();
+                        } else if (data.status === "Active") {
+                            console.log(`⏳ Сделка #${tradeId} еще активна`);
+                        }
+                    })
+                    .catch(error => console.error(`❌ Ошибка для #${tradeId}:`, error));
+            }
+        });
+    }
+
+    // Запускаем автообновление
+    console.log('🚀 Настраиваю автообновление...');
+
+    // Запустить сразу
+    setTimeout(function() {
+        console.log('🔄 Первая проверка сделок');
+        checkTradeResults();
+    }, 2000);
+
+    // Запускать каждые 3 секунды
+    setInterval(function() {
+        console.log('🔄 Автопроверка сделок');
+        checkTradeResults();
+    }, 3000);
+
+    // Обновлять баланс каждые 5 секунд
+    setInterval(function() {
+        console.log('💰 Автообновление баланса');
+        updateUserBalance();
+    }, 3000);
+    
+ 
+
+    console.log('✅ Автообновление настроено');
+    
+    
 </script>
 </body>
 </html>

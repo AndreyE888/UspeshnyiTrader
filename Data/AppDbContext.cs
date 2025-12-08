@@ -20,16 +20,17 @@ namespace UspeshnyiTrader.Data
         {
             base.OnModelCreating(modelBuilder);
             
+              
             modelBuilder.Entity<DistributedCache>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                
+        
                 entity.HasIndex(e => e.ExpiresAtTime)
                     .HasDatabaseName("IX_Sessions_ExpiresAtTime");
-                    
+            
                 entity.Property(e => e.Id)
                     .HasMaxLength(449);
-                    
+            
                 entity.Property(e => e.Value)
                     .IsRequired();
             });
@@ -84,9 +85,10 @@ namespace UspeshnyiTrader.Data
                 .HasForeignKey(t => t.InstrumentId);
 
             modelBuilder.Entity<UserBalance>()
-                .HasOne(ub => ub.User)
-                .WithMany()
-                .HasForeignKey(ub => ub.UserId);
+                .HasOne(b => b.User)              // У каждой записи баланса один пользователь
+                .WithMany(u => u.BalanceHistories) // У пользователя много записей баланса
+                .HasForeignKey(b => b.UserId)      // Внешний ключ
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

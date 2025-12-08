@@ -1,22 +1,33 @@
+# ================================================
+# .gitignore для ASP.NET Core проекта
+# ================================================
+
 # Build outputs
-bin/
-obj/
+[Bb]in/
+[Oo]bj/
 *.dll
 *.exe
 *.pdb
+*.cache
+out/
+[Bb]uild/
+[Bb]uilds/
+
 # IDE files
 .vs/
 .idea/
 *.user
 *.suo
 *.userosscache
-
-
+*.sln.docstates
+*.swp
+*~
 
 # NuGet
-**/packages/
+packages/
 *.nupkg
 .nuget/
+NuGet.Config
 
 # OS files
 .DS_Store
@@ -26,16 +37,42 @@ Thumbs.db
 *.log
 logs/
 
-# Database
-Migrations/
+
 *.db
 *.db-journal
+*.sqlite3
 
 # Secrets
+appsettings.Development.json
 appsettings.Local.json
 *secret*
 *password*
 *connectionstring*
+*.env
 
 # ASP.NET Core
 **/wwwroot/images/uploads/
+wwwroot/lib/  # Если используешь bower/npm локально
+
+# Rider specific (твои текущие)
+/shelf/
+/workspace.xml
+/modules.xml
+/contentModel.xml
+/projectSettingsUpdater.xml
+/httpRequests/
+/dataSources/
+/dataSources.local.xml
+
+# Test results
+TestResult.xml
+*.trx
+
+# Coverage
+coverage.*
+*.coverage
+*.coveragexml
+
+# Publish output
+publish/
+*.pubxml

@@ -17,7 +17,7 @@ namespace UspeshnyiTrader.Data.Repositories
         {
             return await _context.Users
                 .Include(u => u.Trades)
-                .Include(u => u.BalanceHistory)
+                .Include(u => u.BalanceHistories)
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 

@@ -72,7 +72,7 @@ catch (Exception ex)
 }
 
 // РЕГИСТРАЦИЯ СЕРВИСОВ
-//builder.Services.AddHostedService<PriceBackgroundService>(); //обновление цен
+builder.Services.AddHostedService<PriceBackgroundService>(); //обновление цен
 builder.Services.AddScoped<IInstrumentRepository, InstrumentRepository>();
 builder.Services.AddScoped<ITradeRepository, TradeRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -206,5 +206,12 @@ app.Use(async (context, next) =>
 app.MapControllerRoute(
     name: "default", 
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapGet("/test", () => "Hello World!");
+
+
+
+
+
 
 app.Run("https://0.0.0.0:5001");
