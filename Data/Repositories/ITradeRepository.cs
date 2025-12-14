@@ -25,5 +25,11 @@ namespace UspeshnyiTrader.Data.Repositories
         Task<decimal> GetTotalVolumeAsync();
         Task<decimal> GetPlatformProfitAsync();
         Task<List<Trade>> GetUserTradesAsync(int userId);
+        
+        // Методы для работы с результатами сделок
+        Task<List<Trade>> GetWinningTradesAsync(int userId);
+        Task<List<Trade>> GetLosingTradesAsync(int userId);
+        Task<List<Trade>> GetDrawTradesAsync(int userId);
+        Task<Dictionary<TradeResult, int>> GetTradeResultStatsAsync(int userId);
     }
 }

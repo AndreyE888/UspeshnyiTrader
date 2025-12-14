@@ -87,7 +87,23 @@ namespace UspeshnyiTrader.Models.ViewModels
         public Trade? Trade { get; set; }
         public decimal NewBalance { get; set; }
         public decimal Payout { get; set; }
-        public bool IsWin { get; set; }
+    
+        // ⚠️ ИЗМЕНЕНО: Добавляем основное поле для результата
+        public TradeResult Result { get; set; }
+    
+        // ⚠️ ДЛЯ ОБРАТНОЙ СОВМЕСТИМОСТИ (если код где-то использует IsWin):
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public bool IsWin => Result == TradeResult.Win;
+    
+        // ⚠️ ДОПОЛНИТЕЛЬНЫЕ ПОЛЯ ДЛЯ УДОБСТВА:
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public bool IsLoss => Result == TradeResult.Loss;
+    
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public bool IsDraw => Result == TradeResult.Draw;
+    
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public bool IsPending => Result == TradeResult.Pending;
     }
 
     public class ActiveTradeViewModel
@@ -216,10 +232,10 @@ namespace UspeshnyiTrader.Models.ViewModels
             .Sum(t => t.Profit.Value);
             
         public int SessionWins => SessionTrades
-            .Count(t => t.Status == TradeStatus.Completed && t.Profit > 0);
+            .Count(t => t.Status == TradeStatus.Completed && t.Result == TradeResult.Win);
             
         public int SessionLosses => SessionTrades
-            .Count(t => t.Status == TradeStatus.Completed && t.Profit <= 0);
+            .Count(t => t.Status == TradeStatus.Completed && t.Result == TradeResult.Loss);
             
         public decimal SessionWinRate => SessionTrades.Count > 0 ? 
             (decimal)SessionWins / SessionTrades.Count * 100 : 0;
@@ -233,25 +249,25 @@ namespace UspeshnyiTrader.Models.ViewModels
         public static TradingStats CalculateStats(List<Trade> trades)
         {
             var completedTrades = trades.Where(t => t.Status == TradeStatus.Completed).ToList();
-            var activeTrades = trades.Where(t => t.Status == TradeStatus.Active).ToList();
-            
+    
             return new TradingStats
             {
                 TotalTrades = trades.Count,
-                ActiveTrades = activeTrades.Count,
-                WonTrades = completedTrades.Count(t => t.Profit > 0),
-                LostTrades = completedTrades.Count(t => t.Profit <= 0),
-                
+                ActiveTrades = trades.Count(t => t.Status == TradeStatus.Active),
+        
+                // ⚠️ ИЗМЕНЕНО: Используем Result вместо Profit
+                WonTrades = completedTrades.Count(t => t.Result == TradeResult.Win),
+                LostTrades = completedTrades.Count(t => t.Result == TradeResult.Loss),
+                // Примечание: Draw сделки не считаются ни выигрышами, ни проигрышами
+        
                 TotalInvested = completedTrades.Sum(t => t.Amount),
                 TotalPayout = completedTrades.Where(t => t.Profit.HasValue).Sum(t => t.Profit.Value),
-                
-                TodayTrades = trades.Count(t => t.CreatedAt.Date == DateTime.Today),
-                TodayProfitLoss = completedTrades
-                    .Where(t => t.CreatedAt.Date == DateTime.Today && t.Profit.HasValue)
-                    .Sum(t => t.Profit.Value),
-                    
-                BestTrade = completedTrades.Where(t => t.Profit.HasValue).Max(t => t.Profit.Value),
-                WorstTrade = completedTrades.Where(t => t.Profit.HasValue).Min(t => t.Profit.Value)
+        
+                // ⚠️ Также исправить BestTrade/WorstTrade если нужно
+                BestTrade = completedTrades.Where(t => t.Result == TradeResult.Win && t.Profit.HasValue)
+                    .Max(t => t.Profit.Value),
+                WorstTrade = completedTrades.Where(t => t.Result == TradeResult.Loss && t.Profit.HasValue)
+                    .Min(t => t.Profit.Value)
             };
         }
     }

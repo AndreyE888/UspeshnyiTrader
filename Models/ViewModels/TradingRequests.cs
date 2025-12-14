@@ -5,7 +5,7 @@ namespace UspeshnyiTrader.Models.ViewModels
     public class PlaceTradeRequest
     {
         public string Symbol { get; set; } = string.Empty;
-        public TradeType Direction { get; set; }
+        public TradeType TradeType { get; set; }
         public decimal Amount { get; set; }
         public int DurationMinutes { get; set; } = 1;
     }
@@ -20,20 +20,26 @@ namespace UspeshnyiTrader.Models.ViewModels
         public TimeSpan TimeRemaining { get; set; }
     }
 
+// ⚠️ Если используется TradeData класс, тоже нужно проверить:
     public class TradeData
     {
         public int Id { get; set; }
         public string InstrumentSymbol { get; set; } = string.Empty;
-        public TradeType Direction { get; set; }
+        public TradeType Type { get; set; }
         public decimal Amount { get; set; }
         public decimal EntryPrice { get; set; }
-        public decimal CurrentPrice { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime ExpirationTime { get; set; }
-        public string Status { get; set; } = string.Empty;
+        public decimal? ExitPrice { get; set; }
+    
+        // ⚠️ Тоже заменить если есть:
+        public TradeResult Result { get; set; } = TradeResult.Pending;
+    
+        // Для обратной совместимости:
+        public bool IsWin => Result == TradeResult.Win;
+    
         public decimal? Profit { get; set; }
-        public TimeSpan TimeRemaining { get; set; }
-        public bool IsExpired => DateTime.UtcNow >= ExpirationTime;
+        public TradeStatus Status { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? ClosedAt { get; set; }
     }
 
     public class ActiveTradesResponse
@@ -53,7 +59,14 @@ namespace UspeshnyiTrader.Models.ViewModels
     {
         public bool Success { get; set; }
         public string Message { get; set; } = string.Empty;
-        public bool IsWin { get; set; }
+        // ⚠️ ИЗМЕНЕНО: Добавляем полную информацию о результате
+        public TradeResult Result { get; set; } // Основное поле
+    
+        // ⚠️ ДОБАВЛЕНО: Для обратной совместимости и удобства
+        public bool IsWin => Result == TradeResult.Win;
+        public bool IsLoss => Result == TradeResult.Loss;
+        public bool IsDraw => Result == TradeResult.Draw;
+        
         public decimal Payout { get; set; }
         public decimal Profit { get; set; }
         public decimal NewBalance { get; set; }

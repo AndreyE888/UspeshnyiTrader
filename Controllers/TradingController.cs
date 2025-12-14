@@ -230,8 +230,18 @@ namespace UspeshnyiTrader.Controllers
                     openTime = t.CreatedAt,
                     closeTime = t.ClosedAt,
                     duration = t.Duration.TotalMinutes,
+            
+                    // ⚠️ ИЗМЕНЕНО: была логика Profit > 0, теперь используем Result
                     payout = t.Profit > 0 ? t.Amount + t.Profit : 0,
-                    isWin = t.Profit > 0
+            
+                    // ⚠️ ИЗМЕНЕНО: t.Profit > 0 → проверка Result
+                    isWin = t.Result == TradeResult.Win,
+            
+                    // ⚠️ ДОБАВЛЕНО: передаем полный результат для UI
+                    result = t.Result.ToString(), // "Win", "Loss", "Draw", "Pending"
+                    isLoss = t.Result == TradeResult.Loss,
+                    isDraw = t.Result == TradeResult.Draw,
+                    isPending = t.Result == TradeResult.Pending
                 }).OrderByDescending(t => t.openTime)
                 .Take(limit)
                 .ToList();
@@ -240,7 +250,7 @@ namespace UspeshnyiTrader.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTradeResult(int tradeId)  // ← параметр из query string
+        public async Task<IActionResult> GetTradeResult(int tradeId)
         {
             var userId = _sessionService.GetCurrentUserId();
             if (userId == null)
@@ -256,19 +266,30 @@ namespace UspeshnyiTrader.Controllers
             return Json(new
             {
                 success = true,
-                status = trade.Status.ToString(), // ← ДОБАВЬ ЭТО!
+                status = trade.Status.ToString(),
                 isCompleted = trade.Status == TradeStatus.Completed,
                 isActive = trade.Status == TradeStatus.Active,
-                isWin = trade.Profit > 0,
+        
+                // ⚠️ ИЗМЕНЕНО: trade.Profit > 0 → trade.Result == TradeResult.Win
+                isWin = trade.Result == TradeResult.Win,
+        
+                // ⚠️ ДОБАВЛЕНО: полная информация о результате
+                result = trade.Result.ToString(), // "Win", "Loss", "Draw"
+                isLoss = trade.Result == TradeResult.Loss,
+                isDraw = trade.Result == TradeResult.Draw,
+        
                 profit = trade.Profit,
-                payout = trade.Profit > 0 ? trade.Amount + trade.Profit : 0,
+        
+                // ⚠️ ИЗМЕНЕНО: улучшена логика расчета payout
+                payout = trade.Result == TradeResult.Win ? trade.Amount + trade.Profit :
+                    trade.Result == TradeResult.Draw ? trade.Amount : 0,
+        
                 exitPrice = trade.ExitPrice,
                 entryPrice = trade.EntryPrice,
                 amount = trade.Amount,
                 closedAt = trade.ClosedAt?.ToString("HH:mm:ss")
             });
         }
-
 
         // Модель для запроса на размещение ордера
         public class PlaceOrderRequest

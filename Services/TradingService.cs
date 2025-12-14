@@ -185,99 +185,72 @@ namespace UspeshnyiTrader.Services
         //     }
         // }
         
-     public async Task CloseTradeAsync(int tradeId)
+public async Task CloseTradeAsync(int tradeId)
 {
-    Console.WriteLine($"🔥 CLOSE TRADE #{tradeId} - SIMPLE WORKING VERSION");
+    Console.WriteLine($"🔥 CLOSE TRADE #{tradeId}");
     
     try
     {
-        // 1. Используем существующий метод GetByIdAsync
         var trade = await _tradeRepository.GetByIdAsync(tradeId);
         if (trade == null || trade.Status != TradeStatus.Active)
-        {
-            Console.WriteLine($"❌ Trade #{tradeId} not active");
             return;
-        }
         
-        Console.WriteLine($"✅ Trade found: #{trade.Id}, Amount: ${trade.Amount}");
-        
-        // 2. Получаем инструмент (простой запрос)
         var instrument = await _instrumentRepository.GetByIdAsync(trade.InstrumentId);
-        if (instrument == null)
-        {
-            Console.WriteLine($"❌ Instrument not found");
-            return;
-        }
-        
-        // 3. Получаем пользователя для обновления
         var user = await _userRepository.GetByIdAsync(trade.UserId);
-        if (user == null)
-        {
-            Console.WriteLine($"❌ User not found");
+        
+        if (instrument == null || user == null)
             return;
-        }
         
-        Console.WriteLine($"📊 Данные:");
-        Console.WriteLine($"   Entry: ${trade.EntryPrice}");
-        Console.WriteLine($"   Current: ${instrument.CurrentPrice}");
-        Console.WriteLine($"   Balance before: ${user.Balance}");
+        // Закрываем сделку
+        trade.Status = TradeStatus.Completed;
+        trade.ExitPrice = instrument.CurrentPrice;
+        trade.ClosedAt = DateTime.UtcNow;
+        trade.CloseTime = DateTime.UtcNow;
         
-        // 4. Определяем результат
+        // ЛОГИКА ДЛЯ 5-СЕКУНДНЫХ СДЕЛОК (как у тебя сейчас)
         bool isWon = false;
-        if ((trade.Type == TradeType.Buy && instrument.CurrentPrice > trade.EntryPrice) ||
-            (trade.Type == TradeType.Sell && instrument.CurrentPrice < trade.EntryPrice))
+        if ((trade.Type == TradeType.Buy && instrument.CurrentPrice < trade.EntryPrice) ||
+            (trade.Type == TradeType.Sell && instrument.CurrentPrice > trade.EntryPrice))
         {
             isWon = true;
         }
         
-        Console.WriteLine($"   Result: {(isWon ? "WIN 🎉" : "LOSE 💔")}");
-        
-        // 5. Обновляем сделку
-        trade.Status = TradeStatus.Completed;
-        trade.ExitPrice = instrument.CurrentPrice;
-        trade.IsWin = isWon;
-        trade.ClosedAt = DateTime.UtcNow;
-        
-        if (isWon)
+        // Определяем результат с учетом НИЧЬЕЙ
+        if (instrument.CurrentPrice == trade.EntryPrice)
         {
-            // ВЫИГРЫШ: ставка + 80%
-            decimal payout = trade.Amount * 1.8m;
-            decimal profit = payout - trade.Amount;
-            
-            trade.Profit = profit;
+            trade.Result = TradeResult.Draw;        // НИЧЬЯ
+            trade.Profit = 0;
+            trade.Payout = trade.Investment;        // Возврат ставки
+            user.Balance += trade.Investment;       // Возвращаем деньги
+        }
+        else if (isWon)
+        {
+            trade.Result = TradeResult.Win;         // ВЫИГРЫШ
+            decimal payout = trade.Investment * 1.8m;
+            trade.Profit = payout - trade.Investment;
             trade.Payout = payout;
-            
-            // Обновляем баланс
             user.Balance += payout;
-            await _userRepository.UpdateAsync(user);
-            
-            Console.WriteLine($"   Profit: +${profit}");
-            Console.WriteLine($"   Payout: ${payout}");
-            Console.WriteLine($"   New balance: ${user.Balance}");
         }
         else
         {
-            // ПРОИГРЫШ
-            trade.Profit = -trade.Amount;
+            trade.Result = TradeResult.Loss;        // ПРОИГРЫШ
+            trade.Profit = -trade.Investment;
             trade.Payout = 0;
-            Console.WriteLine($"   Loss: -${trade.Amount}");
-            Console.WriteLine($"   Balance unchanged: ${user.Balance}");
+            // Баланс не меняем (деньги уже списали при открытии)
         }
         
-        // 6. Сохраняем сделку
+        // Сохраняем изменения
         await _tradeRepository.UpdateAsync(trade);
+        await _userRepository.UpdateAsync(user);
         
-        Console.WriteLine($"✅✅✅ CLOSE TRADE #{tradeId} - SUCCESS! ✅✅✅");
+        Console.WriteLine($"✅ Trade #{tradeId} closed: {trade.Result}");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"💥💥💥 ERROR: {ex.Message}");
-        if (ex.InnerException != null)
-        {
-            Console.WriteLine($"Inner: {ex.InnerException.Message}");
-        }
+        Console.WriteLine($"💥 Error: {ex.Message}");
     }
 }
+
   public async Task ProcessExpiredTradesAsync()
 {
     Console.WriteLine($"\n📊 ProcessExpiredTradesAsync ВЫЗВАН в {DateTime.UtcNow:HH:mm:ss}");

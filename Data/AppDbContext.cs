@@ -54,7 +54,16 @@ namespace UspeshnyiTrader.Data
 
             modelBuilder.Entity<Trade>()
                 .HasIndex(t => t.Status);
+            
+            modelBuilder.Entity<Trade>()
+                .HasIndex(t => t.Result);
 
+            modelBuilder.Entity<Trade>()
+                .Property(t => t.Result)
+                .HasConversion<string>() // Сохраняем как строку в БД (например: "Win", "Loss", "Draw", "Pending")
+                .HasMaxLength(20) // Максимальная длина строки
+                .HasDefaultValue(TradeResult.Pending); // Значение по умолчанию
+            
             // Configure User entity
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Username)

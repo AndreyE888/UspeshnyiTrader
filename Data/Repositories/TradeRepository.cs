@@ -133,7 +133,7 @@ namespace UspeshnyiTrader.Data.Repositories
                 UPDATE ""Trades"" 
                 SET ""Status"" = {0},
                     ""ExitPrice"" = {1},
-                    ""IsWin"" = {2},
+                    ""Result"" = {2},
                     ""ClosedAt"" = {3},
                     ""Profit"" = {4},
                     ""Payout"" = {5}
@@ -142,7 +142,7 @@ namespace UspeshnyiTrader.Data.Repositories
             await _context.Database.ExecuteSqlRawAsync(sql,
                 (int)trade.Status,
                 trade.ExitPrice,
-                trade.IsWin,
+                trade.Result.ToString(),
                 trade.ClosedAt,
                 trade.Profit,
                 trade.Payout,
@@ -205,7 +205,7 @@ namespace UspeshnyiTrader.Data.Repositories
         {
             return await _context.Trades
                 .AsNoTracking()
-                .Where(t => t.Status == TradeStatus.Completed && t.Profit > 0)
+                .Where(t => t.Status == TradeStatus.Completed && t.Result == TradeResult.Win)
                 .CountAsync();
         }
 
@@ -252,6 +252,43 @@ namespace UspeshnyiTrader.Data.Repositories
                 .FirstOrDefaultAsync();
                 
             return expirationTime != default && expirationTime < DateTime.UtcNow;
+        }
+        
+        public async Task<List<Trade>> GetWinningTradesAsync(int userId)
+        {
+            return await _context.Trades
+                .AsNoTracking()
+                .Where(t => t.UserId == userId && t.Result == TradeResult.Win)
+                .OrderByDescending(t => t.CreatedAt)
+                .ToListAsync();
+        }
+        
+        public async Task<List<Trade>> GetLosingTradesAsync(int userId)
+        {
+            return await _context.Trades
+                .AsNoTracking()
+                .Where(t => t.UserId == userId && t.Result == TradeResult.Loss)
+                .OrderByDescending(t => t.CreatedAt)
+                .ToListAsync();
+        }
+        
+        public async Task<List<Trade>> GetDrawTradesAsync(int userId)
+        {
+            return await _context.Trades
+                .AsNoTracking()
+                .Where(t => t.UserId == userId && t.Result == TradeResult.Draw)
+                .OrderByDescending(t => t.CreatedAt)
+                .ToListAsync();
+        }
+        
+        public async Task<Dictionary<TradeResult, int>> GetTradeResultStatsAsync(int userId)
+        {
+            return await _context.Trades
+                .AsNoTracking()
+                .Where(t => t.UserId == userId && t.Status == TradeStatus.Completed)
+                .GroupBy(t => t.Result)
+                .Select(g => new { Result = g.Key, Count = g.Count() })
+                .ToDictionaryAsync(x => x.Result, x => x.Count);
         }
     }
 }
