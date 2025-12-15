@@ -1021,9 +1021,7 @@
             const result = await response.json();
 
             if (result.success) {
-                showModal('success', 'Сделка открыта!',
-                    `Сделка #${result.tradeId} открыта. Результат через ${durationMinutes} мин.`);
-
+               
                 // Добавляем как ОЖИДАЮЩУЮ (а не сразу с результатом!)
                 addTradeToList('@ViewBag.SelectedSymbol', direction, amount, result.tradeId);
             } else {

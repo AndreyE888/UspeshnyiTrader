@@ -16,8 +16,7 @@ namespace UspeshnyiTrader.Data.Repositories
         public async Task<User?> GetByIdAsync(int id)
         {
             return await _context.Users
-                .Include(u => u.Trades)
-                .Include(u => u.BalanceHistories)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 

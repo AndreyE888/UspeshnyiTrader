@@ -8,7 +8,7 @@ namespace UspeshnyiTrader.Services.BackgroundServices
     {
         private readonly ILogger<TradeExpirationService> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly TimeSpan _checkInterval = TimeSpan.FromSeconds(3); // Check every 3 seconds
+        private readonly TimeSpan _checkInterval = TimeSpan.FromSeconds(1); // Check every 1 seconds
 
         public TradeExpirationService(ILogger<TradeExpirationService> logger, IServiceScopeFactory serviceScopeFactory)
         {

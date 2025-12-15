@@ -122,7 +122,7 @@ namespace UspeshnyiTrader.Controllers
                     success = true,
                     message = "Ордер размещен успешно!",
                     tradeId = trade.Id,
-                    newBalance = trade.User.Balance,
+                    newBalance = user.Balance,
                     timeRemaining = trade.TimeRemaining.ToString(@"mm\:ss"),
                     expirationTime = trade.ExpirationTime.ToString("HH:mm:ss")
                 });
