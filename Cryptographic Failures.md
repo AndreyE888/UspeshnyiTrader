@@ -16,14 +16,6 @@
 <img width="1429" height="121" alt="Общий вид Network с запросом Login" src="https://github.com/user-attachments/assets/35f6e830-26ba-49c1-8219-3f05bd3a2854">
 
 Анализ передаваемых данных:
-
-
-
-
-
-
-
-
 <img width="1356" height="366" alt="Form Data с паролем в открытом виде" src="https://github.com/user-attachments/assets/c6dff54e-a713-4bc0-9066-8fc32de25ecb">
 
 **Выявлено:**
