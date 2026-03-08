@@ -17,13 +17,6 @@
 
 Анализ передаваемых данных:
 
-**Form Data (тело запроса):**
-username: trader1
-password: 123456
-__RequestVerificationToken: CfDJ8J_MhtP8fFJBmLYLhM2SktjFtXSC8JV2Tf0DENY9n9yOstxfJ7uZTHw729EqP4C3e4Wdyvbiprn9c4Q6WdK7QVqLXrzu9R3xIfKctBCXVs3q_dw6mt75Q-kgtnAjkanYxY4GpvG7PKdQ2pr38DwMXAsU
-
-text
-
 <img width="1356" height="366" alt="Form Data с паролем в открытом виде" src="https://github.com/user-attachments/assets/c6dff54e-a713-4bc0-9066-8fc32de25ecb">
 
 **Выявлено:**
