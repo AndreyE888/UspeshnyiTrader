@@ -12,7 +12,8 @@
 - Пользователь 1: логин `trader1`, пароль `trader1`, имя `Ivan`, фамилия `Petrov`
 - Пользователь 2: логин `trader2`, пароль `trader2`, имя `Petr`, фамилия `Ivanov`
 
-![Регистрация пользователя trader1](images/lab1/registration.png)
+![Регистрация пользователя trader1](<img width="545" height="72" alt="image" src="https://github.com/user-attachments/assets/3d7b90e3-090e-417f-bca6-883b8797de21" />
+)
 
 При анализе функционала платформы были перехвачены следующие API-запросы (DevTools F12 → Network):
 
