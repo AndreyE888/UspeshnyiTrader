@@ -12,98 +12,71 @@
 - Пользователь 1: логин `trader1`, пароль `trader1`, имя `Ivan`, фамилия `Petrov`
 - Пользователь 2: логин `trader2`, пароль `trader2`, имя `Petr`, фамилия `Ivanov`
 
-<img width="1279" height="1340" alt="image" src="https://github.com/user-attachments/assets/bca2e350-0db1-4807-832a-ae579b7cd214" />
+**Регистрация пользователя trader1:**
+![Регистрация trader1](https://github.com/user-attachments/assets/bca2e350-0db1-4807-832a-ae579b7cd214)
 
-<img width="960" height="958" alt="image" src="https://github.com/user-attachments/assets/530705db-9822-4f4f-a13b-8d6bd5918b5f" />
+**Регистрация пользователя trader2:**
+![Регистрация trader2](https://github.com/user-attachments/assets/530705db-9822-4f4f-a13b-8d6bd5918b5f)
 
-<img width="1261" height="346" alt="image" src="https://github.com/user-attachments/assets/bcd891c2-e6a3-46ae-9d96-55d81d537fb7" />
+При анализе функционала платформы были перехвачены следующие запросы (DevTools F12 → Network):
 
-<img width="1244" height="356" alt="image" src="https://github.com/user-attachments/assets/98a97782-8015-486f-b59a-b01cb512525c" />
+![Запросы в Network](https://github.com/user-attachments/assets/bcd891c2-e6a3-46ae-9d96-55d81d537fb7)
 
-<img width="1245" height="347" alt="image" src="https://github.com/user-attachments/assets/9a226cdf-5e48-4565-bca7-7e8a0a3cd5a4" />
-
-
-<img width="1263" height="378" alt="image" src="https://github.com/user-attachments/assets/6e07aeb5-c8a5-4e8c-a423-2f6ccd30f8b6" />
-
-нейронка, это профиль trader1 видит админа:
-<img width="2462" height="1501" alt="image" src="https://github.com/user-attachments/assets/7c3dce43-372a-466d-af01-ef78f76b4cdf" />
-
-
-
-
-
-При анализе функционала платформы были перехвачены следующие API-запросы (DevTools F12 → Network):
-
-- `GET /api/user/profile/15` — запрос данных профиля текущего пользователя
-- `GET /api/trading/history/42` — запрос истории сделок
-- `GET /api/account/balance/15` — запрос баланса счета
+Был обнаружен уязвимый эндпоинт: **`/Account/Profile/{id}`**
 
 Выявил:
 - идентификатор пользователя передаётся напрямую в URL;
-- сервер не добавляет дополнительные параметры аутентификации в URL, полагаясь на cookie-сессию.
+- сервер не проверяет права доступа при запросе профиля по ID.
 
 ### 2) Атака
-В ходе анализа API был выявлен запрос:
+В ходе анализа был выявлен запрос:
 
-`GET /api/user/profile/15`
-
-Данный запрос возвращает данные профиля текущего пользователя (trader1) по числовому идентификатору.
+`GET /Account/Profile/15` — возвращает данные профиля текущего пользователя (trader1)
 
 В адресной строке браузера идентификатор был изменён на:
 
-`GET /api/user/profile/1`
+`GET /Account/Profile/1`
 
 Сервер ответил данными пользователя с ID=1 (администратор):
 
 ```json
 {
   "id": 1,
-  "username": "admin",
-  "email": "admin@ushpeshnyitrader.com",
-  "firstName": "Admin",
-  "lastName": "Administrator",
-  "balance": 1000000,
-  "role": "Administrator"
+  "username": "demofixed",
+  "email": "demofixed@example.com",
+  "balance": 10000,
+  "createdAt": "2025-12-04T14:46:24.392748Z",
+  "isAdmin": true
 }
-HTTP-статус: 200 OK
 ```
 
-https://images/lab1/admin_data.png
+HTTP-статус: 200 OK
+
+Демонстрация: trader1 (обычный пользователь) получает данные администратора:
+https://github.com/user-attachments/assets/7c3dce43-372a-466d-af01-ef78f76b4cdf
 
 Таким образом подтверждено, что сервер не проверяет принадлежность запрашиваемого объекта текущему пользователю.
 
-
-
-### 3) Эксплуатация
+3) Эксплуатация
 После подтверждения уязвимости был выполнен перебор идентификаторов пользователей:
 
-ID=2 (Пользователь system):
-GET /api/user/profile/2
+ID=2:
+GET /Account/Profile/2
+https://github.com/user-attachments/assets/98a97782-8015-486f-b59a-b01cb512525c
 
-https://images/lab1/user_2.png
+ID=3:
+GET /Account/Profile/3
+https://github.com/user-attachments/assets/9a226cdf-5e48-4565-bca7-7e8a0a3cd5a4
 
-ID=3 (Пользователь trader2):
-GET /api/user/profile/3
-
-https://images/lab1/user_3.png
-
-ID=5 (Пользователь moderator):
-GET /api/user/profile/5
-
-https://images/lab1/user_5.png
+ID=5:
+GET /Account/Profile/5
+https://github.com/user-attachments/assets/6e07aeb5-c8a5-4e8c-a423-2f6ccd30f8b6
 
 Таким образом был получен доступ к персональным данным пользователей системы. Это подтверждает наличие горизонтальной эскалации привилегий.
 
 Выводы о защищенности
-В ходе тестирования веб-приложения UspeshnyiTrader была выявлена уязвимость класса Broken Access Control, соответствующая категории A01:2021 проекта OWASP Top 10. Приложение не выполняет проверку принадлежности объекта текущему пользователю при обращении к ресурсам вида GET /api/user/profile/{id}.
+В ходе тестирования веб-приложения UspeshnyiTrader была выявлена уязвимость класса Broken Access Control, соответствующая категории A01:2021 проекта OWASP Top 10. Приложение не выполняет проверку принадлежности объекта текущему пользователю при обращении к ресурсам вида /Account/Profile/{id}.
 
 Отсутствие серверной проверки приводит к горизонтальной эскалации привилегий, при которой любой авторизованный пользователь может получить доступ к персональным данным других пользователей системы. Также возможна вертикальная эскалация — получение данных администратора (ID=1).
 
 Эксплуатация уязвимости не требует специальных технических навыков и может быть автоматизирована посредством перебора идентификаторов. Данный тип уязвимости относится к категории CWE-639 (Authorization Bypass Through User-Controlled Key).
-
-Рекомендации по устранению:
-Внедрить проверку прав доступа на серверной стороне
-
-Использовать принцип минимальных привилегий
-
-Использовать непредсказуемые идентификаторы (GUID/UUID) вместо числовых ID
