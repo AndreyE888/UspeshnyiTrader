@@ -16,6 +16,15 @@
 
 <img width="960" height="958" alt="image" src="https://github.com/user-attachments/assets/530705db-9822-4f4f-a13b-8d6bd5918b5f" />
 
+<img width="1261" height="346" alt="image" src="https://github.com/user-attachments/assets/bcd891c2-e6a3-46ae-9d96-55d81d537fb7" />
+
+<img width="1244" height="356" alt="image" src="https://github.com/user-attachments/assets/98a97782-8015-486f-b59a-b01cb512525c" />
+
+<img width="1245" height="347" alt="image" src="https://github.com/user-attachments/assets/9a226cdf-5e48-4565-bca7-7e8a0a3cd5a4" />
+
+
+<img width="1263" height="378" alt="image" src="https://github.com/user-attachments/assets/6e07aeb5-c8a5-4e8c-a423-2f6ccd30f8b6" />
+
 
 При анализе функционала платформы были перехвачены следующие API-запросы (DevTools F12 → Network):
 
