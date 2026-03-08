@@ -12,7 +12,7 @@
 - Пользователь 1: логин `trader1`, пароль `trader1`, имя `Ivan`, фамилия `Petrov`
 - Пользователь 2: логин `trader2`, пароль `trader2`, имя `Petr`, фамилия `Ivanov`
 
-![Регистрация пользователя trader1](https://github.com/user-attachments/assets/d9e04b97-279b-41bf-836c-cd411507aa95)
+<img width="1279" height="1340" alt="image" src="https://github.com/user-attachments/assets/bca2e350-0db1-4807-832a-ae579b7cd214" />
 
 <img width="960" height="958" alt="image" src="https://github.com/user-attachments/assets/530705db-9822-4f4f-a13b-8d6bd5918b5f" />
 
