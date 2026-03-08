@@ -13,6 +13,8 @@
 - Пользователь 2: логин `trader2`, пароль `trader2`, имя `Petr`, фамилия `Ivanov`
 
 ![Регистрация пользователя trader1](https://github.com/user-attachments/assets/3d7b90e3-090e-417f-bca6-883b8797de21)
+
+![Регистрация пользователя trader1](https://github.com/user-attachments/assets/3d7b90e3-090e-417f-bca6-883b8797de21)
 При анализе функционала платформы были перехвачены следующие API-запросы (DevTools F12 → Network):
 
 - `GET /api/user/profile/15` — запрос данных профиля текущего пользователя
