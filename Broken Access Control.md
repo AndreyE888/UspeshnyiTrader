@@ -25,6 +25,12 @@
 
 <img width="1263" height="378" alt="image" src="https://github.com/user-attachments/assets/6e07aeb5-c8a5-4e8c-a423-2f6ccd30f8b6" />
 
+нейронка, это профиль trader1 видит админа:
+<img width="2462" height="1501" alt="image" src="https://github.com/user-attachments/assets/7c3dce43-372a-466d-af01-ef78f76b4cdf" />
+
+
+
+
 
 При анализе функционала платформы были перехвачены следующие API-запросы (DevTools F12 → Network):
 
