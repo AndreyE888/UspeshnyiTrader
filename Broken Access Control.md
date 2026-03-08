@@ -53,8 +53,8 @@
 HTTP-статус: 200 OK
 
 Демонстрация: trader1 (обычный пользователь) получает данные администратора:
+<img width="2462" height="1501" alt="image" src="https://github.com/user-attachments/assets/7c3dce43-372a-466d-af01-ef78f76b4cdf" />
 
-<img width="1244" height="356" alt="image" src="https://github.com/user-attachments/assets/98a97782-8015-486f-b59a-b01cb512525c" />
 
 Таким образом подтверждено, что сервер не проверяет принадлежность запрашиваемого объекта текущему пользователю.
 
@@ -63,7 +63,8 @@ HTTP-статус: 200 OK
 
 ID=2:
 GET /Account/Profile/2
-<img width="2462" height="1501" alt="image" src="https://github.com/user-attachments/assets/7c3dce43-372a-466d-af01-ef78f76b4cdf" />
+
+<img width="1244" height="356" alt="image" src="https://github.com/user-attachments/assets/98a97782-8015-486f-b59a-b01cb512525c" />
 ID=3:
 GET /Account/Profile/3
 <img width="1245" height="347" alt="image" src="https://github.com/user-attachments/assets/9a226cdf-5e48-4565-bca7-7e8a0a3cd5a4" />
