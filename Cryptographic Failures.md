@@ -1,7 +1,3 @@
-<img width="1429" height="121" alt="image" src="https://github.com/user-attachments/assets/35f6e830-26ba-49c1-8219-3f05bd3a2854" />
-
-
-
 # Сбои в криптографии (Cryptographic Failures)
 
 ## Цель работы
@@ -17,21 +13,23 @@
 **Запрос логина:**
 `POST /Account/Login HTTP/2`
 
-![Запрос логина в Network](https://github.com/user-attachments/assets/твой_скрин_1)
+<img width="1429" height="121" alt="Общий вид Network с запросом Login" src="https://github.com/user-attachments/assets/35f6e830-26ba-49c1-8219-3f05bd3a2854">
 
 Анализ передаваемых данных:
 
 **Form Data (тело запроса):**
 username: trader1
 password: 123456
-RequestVerificationToken: unuSvhZ7UbHPTiAbSrrMrZUOPNokvivVIC9Qz2ZA8258YZ7AogToaVF8WeswnEMBTgE9kb93FtsRog
+__RequestVerificationToken: CfDJ8J_MhtP8fFJBmLYLhM2SktjFtXSC8JV2Tf0DENY9n9yOstxfJ7uZTHw729EqP4C3e4Wdyvbiprn9c4Q6WdK7QVqLXrzu9R3xIfKctBCXVs3q_dw6mt75Q-kgtnAjkanYxY4GpvG7PKdQ2pr38DwMXAsU
 
-![Данные формы с паролем в открытом виде](https://github.com/user-attachments/assets/твой_скрин_2)
+text
+
+<img width="1356" height="366" alt="Form Data с паролем в открытом виде" src="https://github.com/user-attachments/assets/c6dff54e-a713-4bc0-9066-8fc32de25ecb">
 
 **Выявлено:**
 - Пароль передаётся в открытом виде (plain text) внутри тела POST-запроса
 - Передача осуществляется по HTTPS (localhost:5001), что обеспечивает защиту канала связи на уровне TLS
-- Присутствует CSRF-токен (RequestVerificationToken) для защиты от межсайтовой подделки запросов
+- Присутствует CSRF-токен (__RequestVerificationToken) для защиты от межсайтовой подделки запросов
 
 ### 2) Атака
 Выявил потенциальный риск: Передача конфиденциальных данных (пароля) в открытом виде, хоть и внутри TLS-туннеля, создает риски, так как приложение полностью полагается только на транспортный уровень безопасности.
@@ -50,13 +48,13 @@ RequestVerificationToken: unuSvhZ7UbHPTiAbSrrMrZUOPNokvivVIC9Qz2ZA8258YZ7AogToaV
 Для проверки защиты от повторного воспроизведения был выполнен следующий тест:
 
 1. В браузере выполнен успешный вход под пользователем `trader1`
-2. Запрос логина был скопирован из DevTools (вкладка Network)
-3. В новом окне браузера (Incognito режим) этот же запрос был отправлен повторно
+2. Запрос логина был скопирован из DevTools (вкладка Network) как fetch
+3. В новом окне браузера (Incognito режим) этот же запрос был отправлен повторно через консоль
+
+<img width="1451" height="1423" alt="Повторный запрос в инкогнито режиме" src="https://github.com/user-attachments/assets/33c14a77-9c69-4926-ae3c-97d20e7a01e0">
 
 **Результат:**
 Сервер обработал повторный запрос как новый успешный вход, создав новую сессию. Это демонстрирует отсутствие защиты от повторного воспроизведения (replay attack).
-
-![Повторный запрос успешно обработан](https://github.com/user-attachments/assets/твой_скрин_3)
 
 Злоумышленник, перехвативший запрос логина (например, через сниффинг трафика или компрометацию прокси-сервера), сможет авторизоваться под чужим именем, даже не зная пароля, просто отправив перехваченный запрос повторно.
 
@@ -64,6 +62,9 @@ RequestVerificationToken: unuSvhZ7UbHPTiAbSrrMrZUOPNokvivVIC9Qz2ZA8258YZ7AogToaV
 
 При анализе cookies после аутентификации было обнаружено:
 
+<img width="2462" height="1450" alt="Анализ cookies" src="https://github.com/user-attachments/assets/424eca73-3863-43ff-b8c1-8b5ceeb04657">
+
+**Выявленные проблемы с cookies:**
 - Отсутствует флаг `Secure` (должен быть установлен для всех cookies при работе по HTTPS)
 - Отсутствует флаг `HttpOnly` (защита от кражи через XSS)
 - Отсутствует флаг `SameSite` (защита от CSRF, хотя используется отдельный токен)
