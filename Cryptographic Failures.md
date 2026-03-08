@@ -1,3 +1,7 @@
+<img width="1429" height="121" alt="image" src="https://github.com/user-attachments/assets/35f6e830-26ba-49c1-8219-3f05bd3a2854" />
+
+
+
 # Сбои в криптографии (Cryptographic Failures)
 
 ## Цель работы
