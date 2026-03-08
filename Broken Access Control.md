@@ -21,7 +21,7 @@
 - `GET /api/trading/history/42` — запрос истории сделок
 - `GET /api/account/balance/15` — запрос баланса счета
 
-![Сеть запросов в DevTools](images/lab1/network_requests.png)
+![Сеть запросов в DevTools](https://github.com/user-attachments/assets/613640a9-9f33-4ddd-af33-fb7e14558cb7)
 
 Выявил:
 - идентификатор пользователя передаётся напрямую в URL (profile/15, balance/15);
