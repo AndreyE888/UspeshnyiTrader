@@ -18,7 +18,7 @@
 **Регистрация пользователя trader2:**
 ![Регистрация trader2](https://github.com/user-attachments/assets/530705db-9822-4f4f-a13b-8d6bd5918b5f)
 
-При анализе функционала платформы были перехвачены следующие запросы (DevTools F12 → Network):
+
 
 ![Запросы в Network](https://github.com/user-attachments/assets/bcd891c2-e6a3-46ae-9d96-55d81d537fb7)
 
