@@ -14,6 +14,9 @@
 
 ![Регистрация пользователя trader1](https://github.com/user-attachments/assets/d9e04b97-279b-41bf-836c-cd411507aa95)
 
+<img width="960" height="958" alt="image" src="https://github.com/user-attachments/assets/530705db-9822-4f4f-a13b-8d6bd5918b5f" />
+
+
 При анализе функционала платформы были перехвачены следующие API-запросы (DevTools F12 → Network):
 
 - `GET /api/user/profile/15` — запрос данных профиля текущего пользователя
