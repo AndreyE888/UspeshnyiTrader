@@ -62,19 +62,7 @@ HTTP-статус: 200 OK
 Таким образом подтверждено, что сервер не проверяет принадлежность запрашиваемого объекта текущему пользователю.
 
 3) Эксплуатация
-После подтверждения уязвимости был выполнен перебор идентификаторов пользователей:
 
-ID=2:
-GET /Account/Profile/2
-
-<img width="1244" height="356" alt="image" src="https://github.com/user-attachments/assets/98a97782-8015-486f-b59a-b01cb512525c" />
-ID=3:
-GET /Account/Profile/3
-<img width="1245" height="347" alt="image" src="https://github.com/user-attachments/assets/9a226cdf-5e48-4565-bca7-7e8a0a3cd5a4" />
-
-ID=4:
-GET /Account/Profile/4
-<img width="1263" height="378" alt="image" src="https://github.com/user-attachments/assets/6e07aeb5-c8a5-4e8c-a423-2f6ccd30f8b6" />
 
 Таким образом был получен доступ к персональным данным пользователей системы. Это подтверждает наличие горизонтальной эскалации привилегий.
 
