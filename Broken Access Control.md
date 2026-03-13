@@ -48,6 +48,7 @@
   "balance": 10000,
   "createdAt": "2025-12-04T14:46:24.392748Z",
   "isAdmin": true
+  "password": "admin123"
 }
 ```
 
