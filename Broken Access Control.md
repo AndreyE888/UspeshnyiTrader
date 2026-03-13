@@ -19,8 +19,7 @@
 ![Регистрация trader2](https://github.com/user-attachments/assets/530705db-9822-4f4f-a13b-8d6bd5918b5f)
 
 
-
-<img width="1284" height="397" alt="image" src="https://github.com/user-attachments/assets/2485e99f-5758-4173-8390-941aa6ad3a9d" />
+<img width="1249" height="382" alt="image" src="https://github.com/user-attachments/assets/93336437-37dd-4a7a-8461-669c67108026" />
 
 
 Был обнаружен уязвимый эндпоинт: **`/Account/Profile/{id}`**
@@ -42,12 +41,12 @@
 
 ```json
 {
-  "id": 1,
-  "username": "demofixed",
-  "email": "demofixed@example.com",
+  "id": 8,
+  "username": "demofixed8",
+  "email": "demofixed8@example.com",
   "balance": 10000,
-  "createdAt": "2025-12-04T14:46:24.392748Z",
-  "isAdmin": true
+  "createdAt": "2026-03-13T11:45:20.572099Z",
+  "isAdmin": false,
   "password": "admin123"
 }
 ```
