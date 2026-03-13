@@ -54,7 +54,8 @@
 HTTP-статус: 200 OK
 
 Демонстрация: trader1 (обычный пользователь) получает данные администратора:
-<img width="2456" height="1425" alt="image" src="https://github.com/user-attachments/assets/356281f1-7e6d-45bf-8675-2b36a01754e9" />
+<img width="2445" height="1408" alt="image" src="https://github.com/user-attachments/assets/9bdbc9d0-6662-4d18-8520-3bcf18582e3e" />
+
 
 
 
