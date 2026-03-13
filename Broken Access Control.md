@@ -20,7 +20,8 @@
 
 
 
-![Запросы в Network](https://github.com/user-attachments/assets/bcd891c2-e6a3-46ae-9d96-55d81d537fb7)
+<img width="1284" height="397" alt="image" src="https://github.com/user-attachments/assets/2485e99f-5758-4173-8390-941aa6ad3a9d" />
+
 
 Был обнаружен уязвимый эндпоинт: **`/Account/Profile/{id}`**
 
