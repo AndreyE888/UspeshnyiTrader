@@ -55,7 +55,8 @@
 HTTP-статус: 200 OK
 
 Демонстрация: trader1 (обычный пользователь) получает данные администратора:
-<img width="2462" height="1501" alt="image" src="https://github.com/user-attachments/assets/7c3dce43-372a-466d-af01-ef78f76b4cdf" />
+<img width="2456" height="1425" alt="image" src="https://github.com/user-attachments/assets/356281f1-7e6d-45bf-8675-2b36a01754e9" />
+
 
 
 Таким образом подтверждено, что сервер не проверяет принадлежность запрашиваемого объекта текущему пользователю.
