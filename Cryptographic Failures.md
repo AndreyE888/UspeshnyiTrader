@@ -52,8 +52,6 @@
 
 При анализе cookies после аутентификации было обнаружено:
 
-<img width="2462" height="1450" alt="Анализ cookies" src="https://github.com/user-attachments/assets/424eca73-3863-43ff-b8c1-8b5ceeb04657">
-
 **Результаты анализа cookies:**
 -  Флаг `HttpOnly` установлен для обоих cookies (защита от кражи через XSS)
 -  Флаг `Secure` установлен (cookies передаются только по HTTPS)
