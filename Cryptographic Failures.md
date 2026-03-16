@@ -13,7 +13,6 @@
 **Запрос логина:**
 `POST /Account/Login HTTP/2`
 
-<img width="1429" height="121" alt="Общий вид Network с запросом Login" src="https://github.com/user-attachments/assets/35f6e830-26ba-49c1-8219-3f05bd3a2854">
 
 Анализ передаваемых данных:
 
