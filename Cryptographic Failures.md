@@ -80,4 +80,14 @@
 
 
 
+вот 3 скрина:
+<img width="2178" height="1420" alt="image" src="https://github.com/user-attachments/assets/3c8956ef-b48a-4292-8c4c-4940488a2cdb" />
+
+<img width="2559" height="1510" alt="image" src="https://github.com/user-attachments/assets/ca64f199-7384-40b1-9739-dd3acc08d3ed" />
+
+<img width="2559" height="1520" alt="image" src="https://github.com/user-attachments/assets/e13d8709-b22d-4b8e-9c97-43dbfe03642f" />
+
+
+
+
 
