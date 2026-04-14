@@ -99,3 +99,9 @@
 4. Использовать короткое время жизни сессий и refresh-механизмы
 5. Внедрить многофакторную аутентификацию (MFA)
 6. Никогда не передавать конфиденциальные данные в открытом виде на прикладном уровне
+
+<img width="633" height="268" alt="image" src="https://github.com/user-attachments/assets/3b83eed6-62cb-4eea-866f-a57c170b8377" />
+
+<img width="633" height="353" alt="image" src="https://github.com/user-attachments/assets/f586b01e-981c-46d2-b287-f0f7382eb5ca" />
+
+
