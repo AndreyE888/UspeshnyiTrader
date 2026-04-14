@@ -38,12 +38,14 @@
 
 Запрос был модифицирован: добавлены конфликтующие заголовки `Content-Length` и `Transfer-Encoding: chunked`, а также сформировано тело, содержащее дополнительный скрытый HTTP-запрос:
 
-<img width="512" height="327" alt="image" src="https://github.com/user-attachments/assets/8517874e-bbff-4bd4-9f95-69ecb3725a70" />
+
+<img width="460" height="284" alt="image" src="https://github.com/user-attachments/assets/6c62aa5f-d9d8-4efc-b6e2-255ba85d4522" />
+
 
 ### 3) Эксплуатация
 Модифицированный запрос был отправлен с помощью инструмента Postman:
+<img width="1736" height="1260" alt="image" src="https://github.com/user-attachments/assets/85d71d35-f63b-4b21-a89f-210059e2d0eb" />
 
-<img width="1767" height="1065" alt="image" src="https://github.com/user-attachments/assets/5925fcee-c206-456f-9158-aa4e2f52b59a" />
 
 В ответе сервера было зафиксировано необычное поведение — последовательно получены два HTTP-ответа.
 
